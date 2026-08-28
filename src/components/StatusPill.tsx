@@ -10,15 +10,25 @@ const map: Record<string, string> = {
   cancelled: "bg-rose-accent/12 text-rose-accent border-rose-accent/30",
 };
 
+export const statusLabels: Record<string, string> = {
+  idle: "Livre",
+  printing: "Imprimindo",
+  error: "Erro",
+  quote: "Orçamento",
+  queued: "Na fila",
+  completed: "Concluído",
+  cancelled: "Cancelado",
+};
+
 export function StatusPill({ status }: { status: JobStatus | PrinterStatus | string }) {
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wider ${
-        map[status] ?? map.quote
+        map[status] ?? map["quote"]
       }`}
     >
       <span className="size-1.5 rounded-full bg-current" />
-      {status}
+      {statusLabels[status] ?? status}
     </span>
   );
 }

@@ -87,15 +87,14 @@ export function money(v: number, currency = "R$") {
 
 /* ---------------- queries ---------------- */
 
-const table = <T,>(name: string, order: string) =>
-  supabase
+const table = async <T,>(name: string, order: string): Promise<T[]> => {
+  const { data, error } = await (supabase as any)
     .from(name)
     .select("*")
-    .order(order, { ascending: true })
-    .then(({ data, error }) => {
-      if (error) throw error;
-      return (data ?? []) as T[];
-    });
+    .order(order, { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as T[];
+};
 
 export const usePrinters = () =>
   useQuery({ queryKey: ["printers"], queryFn: () => table<Printer>("printers", "name") });
@@ -154,7 +153,7 @@ export function useCreateJob() {
   const invalidate = useInvalidateAll();
   return useMutation({
     mutationFn: async (job: Partial<PrintJob>) => {
-      const { data, error } = await supabase.from("print_jobs").insert(job).select().single();
+      const { data, error } = await supabase.from("print_jobs").insert(job as any).select().single();
       if (error) throw error;
       return data as PrintJob;
     },
@@ -166,7 +165,7 @@ export function useUpdateJob() {
   const invalidate = useInvalidateAll();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<PrintJob> }) => {
-      const { error } = await supabase.from("print_jobs").update(patch).eq("id", id);
+      const { error } = await supabase.from("print_jobs").update(patch as any).eq("id", id);
       if (error) throw error;
     },
     onSuccess: invalidate,
@@ -218,7 +217,7 @@ export function useUpdatePrinter() {
   const invalidate = useInvalidateAll();
   return useMutation({
     mutationFn: async ({ id, patch }: { id: string; patch: Partial<Printer> }) => {
-      const { error } = await supabase.from("printers").update(patch).eq("id", id);
+      const { error } = await supabase.from("printers").update(patch as any).eq("id", id);
       if (error) throw error;
     },
     onSuccess: invalidate,
@@ -229,7 +228,7 @@ export function useCreatePrinter() {
   const invalidate = useInvalidateAll();
   return useMutation({
     mutationFn: async (p: Partial<Printer>) => {
-      const { error } = await supabase.from("printers").insert(p);
+      const { error } = await supabase.from("printers").insert(p as any);
       if (error) throw error;
     },
     onSuccess: invalidate,
@@ -241,8 +240,8 @@ export function useUpsertFilament() {
   return useMutation({
     mutationFn: async ({ id, patch }: { id?: string; patch: Partial<Filament> }) => {
       const { error } = id
-        ? await supabase.from("filament_inventory").update(patch).eq("id", id)
-        : await supabase.from("filament_inventory").insert(patch);
+        ? await supabase.from("filament_inventory").update(patch as any).eq("id", id)
+        : await supabase.from("filament_inventory").insert(patch as any);
       if (error) throw error;
     },
     onSuccess: invalidate,
@@ -278,7 +277,7 @@ export function useUpdateSettings() {
   const invalidate = useInvalidateAll();
   return useMutation({
     mutationFn: async (patch: Partial<FarmSettings>) => {
-      const { error } = await supabase.from("farm_settings").update(patch).eq("id", 1);
+      const { error } = await supabase.from("farm_settings").update(patch as any).eq("id", 1);
       if (error) throw error;
     },
     onSuccess: invalidate,
