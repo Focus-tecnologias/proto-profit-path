@@ -10,6 +10,16 @@ const map: Record<string, string> = {
   cancelled: "bg-rose-accent/12 text-rose-accent border-rose-accent/30",
 };
 
+export const statusLabels: Record<string, string> = {
+  idle: "Livre",
+  printing: "Imprimindo",
+  error: "Erro",
+  quote: "Orçamento",
+  queued: "Na fila",
+  completed: "Concluído",
+  cancelled: "Cancelado",
+};
+
 export function StatusPill({ status }: { status: JobStatus | PrinterStatus | string }) {
   return (
     <span
@@ -18,7 +28,7 @@ export function StatusPill({ status }: { status: JobStatus | PrinterStatus | str
       }`}
     >
       <span className="size-1.5 rounded-full bg-current" />
-      {status}
+      {statusLabels[status] ?? status}
     </span>
   );
 }
