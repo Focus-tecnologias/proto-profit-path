@@ -42,7 +42,7 @@ export const Route = createFileRoute("/printers")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Printers;
+  component: Printers,
 });
 
 const empty = { name: "", model: "", kwh_consumption: 120, hourly_rate: 10, status: "idle" };
