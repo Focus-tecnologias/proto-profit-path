@@ -34,6 +34,8 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Visão em tempo real de máquinas, receita, trabalhos ativos e estoque.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Dashboard,

@@ -37,6 +37,8 @@ export const Route = createFileRoute("/estimator")({
         property: "og:description",
         content: "Orce qualquer impressão em segundos com margem de lucro ao vivo.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Estimator,
