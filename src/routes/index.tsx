@@ -23,16 +23,16 @@ import { money, useFilaments, useJobs, usePrinters, useSettings } from "@/lib/fa
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Farm Dashboard — PrintHub Manager" },
+      { title: "Painel da Fazenda — PrintHub Manager" },
       {
         name: "description",
         content:
-          "Live overview of your 3D printing farm: printer status, revenue, active jobs and filament stock.",
+          "Visão em tempo real da sua fazenda de impressão 3D: status das máquinas, receita, trabalhos ativos e estoque de filamento.",
       },
-      { property: "og:title", content: "Farm Dashboard — PrintHub Manager" },
+      { property: "og:title", content: "Painel da Fazenda — PrintHub Manager" },
       {
         property: "og:description",
-        content: "Live overview of printer status, revenue, active jobs and filament stock.",
+        content: "Visão em tempo real de máquinas, receita, trabalhos ativos e estoque.",
       },
     ],
   }),
@@ -88,36 +88,36 @@ function Dashboard() {
 
   return (
     <AppShell
-      title="Farm Dashboard"
-      subtitle="Real-time operations across every machine, spool and open job."
+      title="Painel da Fazenda"
+      subtitle="Operação em tempo real de cada máquina, bobina e trabalho aberto."
     >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat
           icon={CircleDollarSign}
-          label="Gross revenue"
+          label="Faturamento bruto"
           value={money(revenue, currency)}
-          hint={`${completed.length} completed jobs`}
+          hint={`${completed.length} trabalhos concluídos`}
           tone="text-emerald-accent"
         />
         <Stat
           icon={TrendingUp}
-          label="Net profit"
+          label="Lucro líquido"
           value={money(revenue - costs, currency)}
-          hint={`${money(costs, currency)} in recovered costs`}
+          hint={`${money(costs, currency)} em custos recuperados`}
           tone="text-cyan-accent"
         />
         <Stat
           icon={Activity}
-          label="Active jobs"
+          label="Trabalhos ativos"
           value={String(active.length)}
-          hint={`${jobs.filter((j) => j.status === "quote").length} open quotes`}
+          hint={`${jobs.filter((j) => j.status === "quote").length} orçamentos abertos`}
           tone="text-amber-accent"
         />
         <Stat
           icon={Boxes}
-          label="Filament in stock"
+          label="Filamento em estoque"
           value={`${(stock / 1000).toFixed(2)} kg`}
-          hint={`${filaments.length} spools tracked`}
+          hint={`${filaments.length} bobinas monitoradas`}
           tone="text-primary"
         />
       </div>
@@ -125,9 +125,9 @@ function Dashboard() {
       <div className="mt-6 grid gap-6 lg:grid-cols-5">
         <section className="panel lg:col-span-3">
           <header className="flex items-center justify-between border-b border-border px-5 py-4">
-            <h2 className="text-base font-semibold">Machine floor</h2>
+            <h2 className="text-base font-semibold">Chão de fábrica</h2>
             <Link to="/printers" className="text-xs text-primary hover:underline">
-              Manage printers
+              Gerenciar impressoras
             </Link>
           </header>
           <ul className="divide-y divide-border">
@@ -149,14 +149,14 @@ function Dashboard() {
               </li>
             ))}
             {printers.length === 0 ? (
-              <li className="px-5 py-8 text-sm text-muted-foreground">No printers registered.</li>
+              <li className="px-5 py-8 text-sm text-muted-foreground">Nenhuma impressora cadastrada.</li>
             ) : null}
           </ul>
         </section>
 
         <section className="panel lg:col-span-2">
           <header className="border-b border-border px-5 py-4">
-            <h2 className="text-base font-semibold">Spool levels</h2>
+            <h2 className="text-base font-semibold">Nível das bobinas</h2>
           </header>
           <div className="h-[260px] p-4">
             <ResponsiveContainer width="100%" height="100%">
@@ -193,9 +193,9 @@ function Dashboard() {
 
       <section className="panel mt-6">
         <header className="flex items-center justify-between border-b border-border px-5 py-4">
-          <h2 className="text-base font-semibold">Latest jobs</h2>
+          <h2 className="text-base font-semibold">Últimos trabalhos</h2>
           <Link to="/queue" className="text-xs text-primary hover:underline">
-            Open production queue
+            Abrir fila de produção
           </Link>
         </header>
         <ul className="divide-y divide-border">
@@ -213,9 +213,9 @@ function Dashboard() {
           ))}
           {jobs.length === 0 ? (
             <li className="px-5 py-8 text-sm text-muted-foreground">
-              No jobs yet — start with the{" "}
+              Nenhum trabalho ainda — comece pelo{" "}
               <Link to="/estimator" className="text-primary hover:underline">
-                cost estimator
+                orçamentador
               </Link>
               .
             </li>

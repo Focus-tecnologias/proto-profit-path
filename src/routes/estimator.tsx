@@ -26,16 +26,16 @@ import {
 export const Route = createFileRoute("/estimator")({
   head: () => ({
     meta: [
-      { title: "Cost Estimator — PrintHub Manager" },
+      { title: "Orçamento de Impressão — PrintHub Manager" },
       {
         name: "description",
         content:
-          "Interactive 3D print quotation: material, energy and labour costs with a live profit-margin slider.",
+          "Orçamento interativo de impressão 3D: custo de material, energia e mão de obra com margem de lucro ao vivo.",
       },
-      { property: "og:title", content: "Cost Estimator — PrintHub Manager" },
+      { property: "og:title", content: "Orçamento de Impressão — PrintHub Manager" },
       {
         property: "og:description",
-        content: "Quote any print in seconds with a live profit-margin slider.",
+        content: "Orce qualquer impressão em segundos com margem de lucro ao vivo.",
       },
     ],
   }),
@@ -80,7 +80,7 @@ function Estimator() {
 
   async function submit() {
     if (!jobName.trim()) {
-      toast.error("Give the job a name first.");
+      toast.error("Dê um nome ao trabalho primeiro.");
       return;
     }
     await createJob.mutateAsync({
@@ -97,44 +97,44 @@ function Estimator() {
       status: printerId ? "printing" : "queued",
       assigned_printer_id: printerId || null,
     });
-    toast.success("Job created and added to the production queue.");
+    toast.success("Trabalho criado e adicionado à fila de produção.");
     navigate({ to: "/queue" });
   }
 
   return (
     <AppShell
-      title="Cost Estimator"
-      subtitle="Material + energy + labour, marked up live. Push straight into the queue."
+      title="Orçamento de Impressão"
+      subtitle="Material + energia + mão de obra, com margem aplicada na hora. Envie direto para a fila."
     >
       <div className="grid gap-6 lg:grid-cols-5">
         <section className="panel space-y-5 p-6 lg:col-span-3">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="job">Job name</Label>
+              <Label htmlFor="job">Nome do trabalho</Label>
               <Input
                 id="job"
                 value={jobName}
                 onChange={(e) => setJobName(e.target.value)}
-                placeholder="Enclosure v3"
+                placeholder="Gabinete v3"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="customer">Customer</Label>
+              <Label htmlFor="customer">Cliente</Label>
               <Input
                 id="customer"
                 value={customer}
                 onChange={(e) => setCustomer(e.target.value)}
-                placeholder="Acme Robotics"
+                placeholder="Acme Robótica"
               />
             </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label>Filament</Label>
+              <Label>Filamento</Label>
               <Select value={filament?.id ?? ""} onValueChange={setFilamentId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select spool" />
+                  <SelectValue placeholder="Selecionar bobina" />
                 </SelectTrigger>
                 <SelectContent>
                   {filaments.map((f) => (
@@ -152,10 +152,10 @@ function Estimator() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Printer (optional)</Label>
+              <Label>Impressora (opcional)</Label>
               <Select value={printerId} onValueChange={setPrinterId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Leave unassigned" />
+                  <SelectValue placeholder="Deixar sem atribuir" />
                 </SelectTrigger>
                 <SelectContent>
                   {printers.map((p) => (
@@ -170,7 +170,7 @@ function Estimator() {
 
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="space-y-2">
-              <Label htmlFor="w">Weight (g)</Label>
+              <Label htmlFor="w">Peso (g)</Label>
               <Input
                 id="w"
                 type="number"
@@ -180,7 +180,7 @@ function Estimator() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="h">Print time (h)</Label>
+              <Label htmlFor="h">Tempo de impressão (h)</Label>
               <Input
                 id="h"
                 type="number"
@@ -191,7 +191,7 @@ function Estimator() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="s">Setup / labour</Label>
+              <Label htmlFor="s">Preparo / mão de obra</Label>
               <Input
                 id="s"
                 type="number"
@@ -205,7 +205,7 @@ function Estimator() {
 
           <div className="space-y-3 rounded-lg border border-border bg-surface-raised p-4">
             <div className="flex items-center justify-between">
-              <Label>Profit margin</Label>
+              <Label>Margem de lucro</Label>
               <span className="num text-lg font-semibold text-emerald-accent">{margin}%</span>
             </div>
             <Slider
@@ -213,7 +213,7 @@ function Estimator() {
               min={10}
               max={200}
               step={5}
-              onValueChange={(v) => setMargin(v[0])}
+              onValueChange={(v) => setMargin(v[0] ?? margin)}
             />
             <div className="label-tag flex justify-between">
               <span>10%</span>
@@ -223,35 +223,35 @@ function Estimator() {
 
           {!enoughStock ? (
             <p className="rounded-md border border-rose-accent/30 bg-rose-accent/10 px-3 py-2 text-xs text-rose-accent">
-              Selected spool only has {filament?.remaining_g} g left — not enough for this job.
+              A bobina selecionada tem apenas {filament?.remaining_g} g restantes — não é suficiente para este trabalho.
             </p>
           ) : null}
         </section>
 
         <section className="panel h-fit p-6 lg:col-span-2">
           <div className="label-tag flex items-center gap-2">
-            <Zap className="size-3.5" /> Live breakdown
+            <Zap className="size-3.5" /> Detalhamento ao vivo
           </div>
 
           <dl className="mt-4 space-y-3 text-sm">
             <Row label="Material" value={money(result.materialCost, currency)} />
             <Row
-              label={`Energy @ ${settings?.kwh_price ?? 0.75}/kWh`}
+              label={`Energia @ ${settings?.kwh_price ?? 0.75}/kWh`}
               value={money(result.energyCost, currency)}
             />
-            <Row label="Setup / labour" value={money(setupFee, currency)} />
+            <Row label="Preparo / mão de obra" value={money(setupFee, currency)} />
             <div className="border-t border-border pt-3">
-              <Row label="Total cost" value={money(result.totalCost, currency)} />
+              <Row label="Custo total" value={money(result.totalCost, currency)} />
             </div>
             <Row
-              label="Profit"
+              label="Lucro"
               value={money(result.profit, currency)}
               className="text-emerald-accent"
             />
           </dl>
 
           <div className="mt-5 rounded-lg border border-primary/30 bg-primary/10 p-4">
-            <p className="label-tag">Final price</p>
+            <p className="label-tag">Preço final</p>
             <p className="num mt-1 text-3xl font-semibold text-primary">
               {money(result.finalPrice, currency)}
             </p>
@@ -264,7 +264,7 @@ function Estimator() {
             disabled={createJob.isPending}
           >
             <Rocket className="size-4" />
-            Create job & add to queue
+            Criar trabalho e enviar à fila
           </Button>
         </section>
       </div>

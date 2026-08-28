@@ -11,12 +11,12 @@ import type { ReactNode } from "react";
 import logo from "@/assets/focus-logo.png.asset.json";
 
 const nav = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/estimator", label: "Estimator", icon: Calculator },
-  { to: "/queue", label: "Queue", icon: ListOrdered },
-  { to: "/inventory", label: "Filament", icon: Boxes },
-  { to: "/printers", label: "Printers", icon: PrinterIcon },
-  { to: "/revenue", label: "Revenue", icon: PieChart },
+  { to: "/", label: "Painel", icon: LayoutDashboard },
+  { to: "/estimator", label: "Orçamento", icon: Calculator },
+  { to: "/queue", label: "Fila", icon: ListOrdered },
+  { to: "/inventory", label: "Filamento", icon: Boxes },
+  { to: "/printers", label: "Impressoras", icon: PrinterIcon },
+  { to: "/revenue", label: "Receita", icon: PieChart },
 ] as const;
 
 export function AppShell({

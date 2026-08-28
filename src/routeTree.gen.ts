@@ -11,6 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EstimatorRouteImport } from './routes/estimator'
+import { Route as InventoryRouteImport } from './routes/inventory'
+import { Route as PrintersRouteImport } from './routes/printers'
+import { Route as QueueRouteImport } from './routes/queue'
+import { Route as RevenueRouteImport } from './routes/revenue'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +26,75 @@ const EstimatorRoute = EstimatorRouteImport.update({
   path: '/estimator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InventoryRoute = InventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrintersRoute = PrintersRouteImport.update({
+  id: '/printers',
+  path: '/printers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QueueRoute = QueueRouteImport.update({
+  id: '/queue',
+  path: '/queue',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RevenueRoute = RevenueRouteImport.update({
+  id: '/revenue',
+  path: '/revenue',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/estimator': typeof EstimatorRoute
+  '/inventory': typeof InventoryRoute
+  '/printers': typeof PrintersRoute
+  '/queue': typeof QueueRoute
+  '/revenue': typeof RevenueRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/estimator': typeof EstimatorRoute
+  '/inventory': typeof InventoryRoute
+  '/printers': typeof PrintersRoute
+  '/queue': typeof QueueRoute
+  '/revenue': typeof RevenueRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/estimator': typeof EstimatorRoute
+  '/inventory': typeof InventoryRoute
+  '/printers': typeof PrintersRoute
+  '/queue': typeof QueueRoute
+  '/revenue': typeof RevenueRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/estimator'
+  fullPaths:
+    '/' | '/estimator' | '/inventory' | '/printers' | '/queue' | '/revenue'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/estimator'
-  id: '__root__' | '/' | '/estimator'
+  to: '/' | '/estimator' | '/inventory' | '/printers' | '/queue' | '/revenue'
+  id:
+    | '__root__'
+    | '/'
+    | '/estimator'
+    | '/inventory'
+    | '/printers'
+    | '/queue'
+    | '/revenue'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EstimatorRoute: typeof EstimatorRoute
+  InventoryRoute: typeof InventoryRoute
+  PrintersRoute: typeof PrintersRoute
+  QueueRoute: typeof QueueRoute
+  RevenueRoute: typeof RevenueRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +113,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstimatorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/inventory': {
+      id: '/inventory'
+      path: '/inventory'
+      fullPath: '/inventory'
+      preLoaderRoute: typeof InventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/printers': {
+      id: '/printers'
+      path: '/printers'
+      fullPath: '/printers'
+      preLoaderRoute: typeof PrintersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/queue': {
+      id: '/queue'
+      path: '/queue'
+      fullPath: '/queue'
+      preLoaderRoute: typeof QueueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/revenue': {
+      id: '/revenue'
+      path: '/revenue'
+      fullPath: '/revenue'
+      preLoaderRoute: typeof RevenueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EstimatorRoute: EstimatorRoute,
+  InventoryRoute: InventoryRoute,
+  PrintersRoute: PrintersRoute,
+  QueueRoute: QueueRoute,
+  RevenueRoute: RevenueRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
