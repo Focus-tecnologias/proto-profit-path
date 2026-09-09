@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as EstimatorRouteImport } from './routes/estimator'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as PrintersRouteImport } from './routes/printers'
+import { Route as ProductsRouteImport } from './routes/products'
 import { Route as QueueRouteImport } from './routes/queue'
 import { Route as RevenueRouteImport } from './routes/revenue'
 
@@ -36,6 +37,11 @@ const PrintersRoute = PrintersRouteImport.update({
   path: '/printers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductsRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QueueRoute = QueueRouteImport.update({
   id: '/queue',
   path: '/queue',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/estimator': typeof EstimatorRoute
   '/inventory': typeof InventoryRoute
   '/printers': typeof PrintersRoute
+  '/products': typeof ProductsRoute
   '/queue': typeof QueueRoute
   '/revenue': typeof RevenueRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/estimator': typeof EstimatorRoute
   '/inventory': typeof InventoryRoute
   '/printers': typeof PrintersRoute
+  '/products': typeof ProductsRoute
   '/queue': typeof QueueRoute
   '/revenue': typeof RevenueRoute
 }
@@ -69,21 +77,36 @@ export interface FileRoutesById {
   '/estimator': typeof EstimatorRoute
   '/inventory': typeof InventoryRoute
   '/printers': typeof PrintersRoute
+  '/products': typeof ProductsRoute
   '/queue': typeof QueueRoute
   '/revenue': typeof RevenueRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/estimator' | '/inventory' | '/printers' | '/queue' | '/revenue'
+    | '/'
+    | '/estimator'
+    | '/inventory'
+    | '/printers'
+    | '/products'
+    | '/queue'
+    | '/revenue'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/estimator' | '/inventory' | '/printers' | '/queue' | '/revenue'
+  to:
+    | '/'
+    | '/estimator'
+    | '/inventory'
+    | '/printers'
+    | '/products'
+    | '/queue'
+    | '/revenue'
   id:
     | '__root__'
     | '/'
     | '/estimator'
     | '/inventory'
     | '/printers'
+    | '/products'
     | '/queue'
     | '/revenue'
   fileRoutesById: FileRoutesById
@@ -93,6 +116,7 @@ export interface RootRouteChildren {
   EstimatorRoute: typeof EstimatorRoute
   InventoryRoute: typeof InventoryRoute
   PrintersRoute: typeof PrintersRoute
+  ProductsRoute: typeof ProductsRoute
   QueueRoute: typeof QueueRoute
   RevenueRoute: typeof RevenueRoute
 }
@@ -127,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrintersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/queue': {
       id: '/queue'
       path: '/queue'
@@ -149,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   EstimatorRoute: EstimatorRoute,
   InventoryRoute: InventoryRoute,
   PrintersRoute: PrintersRoute,
+  ProductsRoute: ProductsRoute,
   QueueRoute: QueueRoute,
   RevenueRoute: RevenueRoute,
 }
