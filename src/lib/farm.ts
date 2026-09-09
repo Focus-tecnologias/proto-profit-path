@@ -332,3 +332,199 @@ export function useDeleteProduct() {
     onSuccess: invalidate,
   });
 }
+
+/* ---------------- operacional ---------------- */
+
+export type Operator = {
+  id: string;
+  name: string;
+  role: string;
+  hourly_cost: number;
+  active: boolean;
+  created_at: string;
+};
+
+export type SessionStatus = "running" | "paused" | "completed" | "cancelled";
+
+export type ProductionSession = {
+  id: string;
+  job_id: string | null;
+  printer_id: string | null;
+  operator_id: string | null;
+  label: string;
+  status: SessionStatus;
+  started_at: string;
+  ended_at: string | null;
+  paused_seconds: number;
+  paused_at: string | null;
+  notes: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export const useOperators = () =>
+  useQuery({ queryKey: ["operators"], queryFn: () => table<Operator>("operators", "name") });
+
+export const useSessions = () =>
+  useQuery({
+    queryKey: ["sessions"],
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from("production_sessions")
+        .select("*")
+        .order("started_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as ProductionSession[];
+    },
+  });
+
+/** Segundos efetivos de produção de uma sessão (descontando pausas). */
+export function sessionSeconds(s: ProductionSession, now = Date.now()) {
+  const start = new Date(s.started_at).getTime();
+  const end = s.ended_at
+    ? new Date(s.ended_at).getTime()
+    : s.status === "paused" && s.paused_at
+      ? new Date(s.paused_at).getTime()
+      : now;
+  return Math.max(0, Math.floor((end - start) / 1000) - Number(s.paused_seconds ?? 0));
+}
+
+export function formatDuration(seconds: number) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
+
+function useInvalidateOps() {
+  const qc = useQueryClient();
+  return () => {
+    ["operators", "sessions", "printers", "jobs"].forEach((k) =>
+      qc.invalidateQueries({ queryKey: [k] }),
+    );
+  };
+}
+
+export function useUpsertOperator() {
+  const invalidate = useInvalidateOps();
+  return useMutation({
+    mutationFn: async ({ id, patch }: { id?: string; patch: Partial<Operator> }) => {
+      const { error } = id
+        ? await (supabase as any).from("operators").update(patch).eq("id", id)
+        : await (supabase as any).from("operators").insert(patch);
+      if (error) throw error;
+    },
+    onSuccess: invalidate,
+  });
+}
+
+export function useDeleteOperator() {
+  const invalidate = useInvalidateOps();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase as any).from("operators").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: invalidate,
+  });
+}
+
+export function useStartSession() {
+  const invalidate = useInvalidateOps();
+  return useMutation({
+    mutationFn: async (input: Partial<ProductionSession>) => {
+      const { error } = await (supabase as any).from("production_sessions").insert({
+        ...input,
+        status: "running",
+        started_at: new Date().toISOString(),
+      });
+      if (error) throw error;
+      if (input.printer_id) {
+        await (supabase as any)
+          .from("printers")
+          .update({ status: "printing" })
+          .eq("id", input.printer_id);
+      }
+      if (input.job_id) {
+        await (supabase as any)
+          .from("print_jobs")
+          .update({ status: "printing", assigned_printer_id: input.printer_id ?? null })
+          .eq("id", input.job_id);
+      }
+    },
+    onSuccess: invalidate,
+  });
+}
+
+export function useSessionAction() {
+  const invalidate = useInvalidateOps();
+  return useMutation({
+    mutationFn: async ({
+      session,
+      action,
+    }: {
+      session: ProductionSession;
+      action: "pause" | "resume" | "finish" | "cancel";
+    }) => {
+      const now = new Date();
+      let patch: Partial<ProductionSession> = {};
+
+      if (action === "pause") {
+        patch = { status: "paused", paused_at: now.toISOString() };
+      } else if (action === "resume") {
+        const extra = session.paused_at
+          ? Math.floor((now.getTime() - new Date(session.paused_at).getTime()) / 1000)
+          : 0;
+        patch = {
+          status: "running",
+          paused_at: null,
+          paused_seconds: Number(session.paused_seconds ?? 0) + extra,
+        };
+      } else {
+        const extra =
+          session.status === "paused" && session.paused_at
+            ? Math.floor((now.getTime() - new Date(session.paused_at).getTime()) / 1000)
+            : 0;
+        patch = {
+          status: action === "finish" ? "completed" : "cancelled",
+          ended_at: now.toISOString(),
+          paused_at: null,
+          paused_seconds: Number(session.paused_seconds ?? 0) + extra,
+        };
+      }
+
+      const { error } = await (supabase as any)
+        .from("production_sessions")
+        .update(patch)
+        .eq("id", session.id);
+      if (error) throw error;
+
+      if (action === "finish" || action === "cancel") {
+        if (session.printer_id) {
+          await (supabase as any)
+            .from("printers")
+            .update({ status: "idle" })
+            .eq("id", session.printer_id);
+        }
+        if (session.job_id && action === "finish") {
+          await (supabase as any)
+            .from("print_jobs")
+            .update({ status: "completed" })
+            .eq("id", session.job_id);
+        }
+      }
+    },
+    onSuccess: invalidate,
+  });
+}
+
+export function useDeleteSession() {
+  const invalidate = useInvalidateOps();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase as any).from("production_sessions").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: invalidate,
+  });
+}
