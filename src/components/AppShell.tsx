@@ -16,6 +16,7 @@ const nav = [
   { to: "/estimator", label: "Orçamento", icon: Calculator },
   { to: "/queue", label: "Fila", icon: ListOrdered },
   { to: "/inventory", label: "Filamento", icon: Boxes },
+  { to: "/products", label: "Produtos", icon: Package },
   { to: "/printers", label: "Impressoras", icon: PrinterIcon },
   { to: "/revenue", label: "Receita", icon: PieChart },
 ] as const;
