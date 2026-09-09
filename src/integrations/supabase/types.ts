@@ -65,6 +65,33 @@ export type Database = {
         }
         Relationships: []
       }
+      operators: {
+        Row: {
+          active: boolean
+          created_at: string
+          hourly_cost: number
+          id: string
+          name: string
+          role: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          hourly_cost?: number
+          id?: string
+          name: string
+          role?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          hourly_cost?: number
+          id?: string
+          name?: string
+          role?: string
+        }
+        Relationships: []
+      }
       partner_splits: {
         Row: {
           created_at: string
@@ -184,6 +211,76 @@ export type Database = {
           status?: string
         }
         Relationships: []
+      }
+      production_sessions: {
+        Row: {
+          created_at: string
+          ended_at: string | null
+          id: string
+          job_id: string | null
+          label: string
+          notes: string
+          operator_id: string | null
+          paused_at: string | null
+          paused_seconds: number
+          printer_id: string | null
+          started_at: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          job_id?: string | null
+          label?: string
+          notes?: string
+          operator_id?: string | null
+          paused_at?: string | null
+          paused_seconds?: number
+          printer_id?: string | null
+          started_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          job_id?: string | null
+          label?: string
+          notes?: string
+          operator_id?: string | null
+          paused_at?: string | null
+          paused_seconds?: number
+          printer_id?: string | null
+          started_at?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "production_sessions_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "print_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "production_sessions_operator_id_fkey"
+            columns: ["operator_id"]
+            isOneToOne: false
+            referencedRelation: "operators"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "production_sessions_printer_id_fkey"
+            columns: ["printer_id"]
+            isOneToOne: false
+            referencedRelation: "printers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       products: {
         Row: {
