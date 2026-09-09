@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { Rocket, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
+import { QuoteNoteDialog } from "@/components/QuoteNote";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -268,6 +269,26 @@ function Estimator() {
             <Rocket className="size-4" />
             Criar trabalho e enviar à fila
           </Button>
+
+          <div className="mt-3">
+            <QuoteNoteDialog
+              quote={{
+                jobName,
+                customerName: customer,
+                filament: filament ? `${filament.material} · ${filament.brand}` : "",
+                printer: printer ? `${printer.name} · ${printer.model}` : "",
+                weightGrams: weight,
+                hours,
+                setupFee,
+                materialCost: result.materialCost,
+                energyCost: result.energyCost,
+                totalCost: result.totalCost,
+                profit: result.profit,
+                finalPrice: result.finalPrice,
+                currency,
+              }}
+            />
+          </div>
         </section>
       </div>
     </AppShell>
