@@ -185,6 +185,51 @@ export type Database = {
         }
         Relationships: []
       }
+      products: {
+        Row: {
+          category: string
+          color_hex: string
+          cost_price: number
+          created_at: string
+          description: string
+          id: string
+          min_quantity: number
+          name: string
+          quantity: number
+          sale_price: number
+          sku: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          color_hex?: string
+          cost_price?: number
+          created_at?: string
+          description?: string
+          id?: string
+          min_quantity?: number
+          name: string
+          quantity?: number
+          sale_price?: number
+          sku?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          color_hex?: string
+          cost_price?: number
+          created_at?: string
+          description?: string
+          id?: string
+          min_quantity?: number
+          name?: string
+          quantity?: number
+          sale_price?: number
+          sku?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

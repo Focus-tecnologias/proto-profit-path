@@ -283,3 +283,52 @@ export function useUpdateSettings() {
     onSuccess: invalidate,
   });
 }
+
+/* ---------------- produtos (estoque) ---------------- */
+
+export type Product = {
+  id: string;
+  name: string;
+  sku: string;
+  category: string;
+  description: string;
+  color_hex: string;
+  cost_price: number;
+  sale_price: number;
+  quantity: number;
+  min_quantity: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export const useProducts = () =>
+  useQuery({ queryKey: ["products"], queryFn: () => table<Product>("products", "name") });
+
+function useInvalidateProducts() {
+  const qc = useQueryClient();
+  return () => qc.invalidateQueries({ queryKey: ["products"] });
+}
+
+export function useUpsertProduct() {
+  const invalidate = useInvalidateProducts();
+  return useMutation({
+    mutationFn: async ({ id, patch }: { id?: string; patch: Partial<Product> }) => {
+      const { error } = id
+        ? await (supabase as any).from("products").update(patch).eq("id", id)
+        : await (supabase as any).from("products").insert(patch);
+      if (error) throw error;
+    },
+    onSuccess: invalidate,
+  });
+}
+
+export function useDeleteProduct() {
+  const invalidate = useInvalidateProducts();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase as any).from("products").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: invalidate,
+  });
+}
