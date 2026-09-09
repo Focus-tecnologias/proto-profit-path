@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   ListOrdered,
   Boxes,
+  Package,
   Printer as PrinterIcon,
   PieChart,
 } from "lucide-react";
