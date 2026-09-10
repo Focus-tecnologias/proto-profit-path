@@ -23,13 +23,13 @@ import { money, useFilaments, useJobs, usePrinters, useSettings } from "@/lib/fa
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Painel da Fazenda — PrintHub Manager" },
+      { title: "Painel da Fabrica — PrintHub Manager" },
       {
         name: "description",
         content:
-          "Visão em tempo real da sua fazenda de impressão 3D: status das máquinas, receita, trabalhos ativos e estoque de filamento.",
+          "Visão em tempo real da sua fabrica de impressão 3D: status das máquinas, receita, trabalhos ativos e estoque de filamento.",
       },
-      { property: "og:title", content: "Painel da Fazenda — PrintHub Manager" },
+      { property: "og:title", content: "Painel da Fabrica — PrintHub Manager" },
       {
         property: "og:description",
         content: "Visão em tempo real de máquinas, receita, trabalhos ativos e estoque.",
