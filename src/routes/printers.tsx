@@ -4,6 +4,9 @@ import { Box, CircleAlert, Clock3, Gauge, Plus, Printer as PrinterIcon, Zap } fr
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
 import { StatusPill } from "@/components/StatusPill";
+import bambuP1s from "@/assets/printer-bambu-p1s.jpg";
+import enderS1 from "@/assets/printer-ender-s1.jpg";
+import prusaMk3s from "@/assets/printer-prusa-mk3s.jpg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -47,6 +50,19 @@ export const Route = createFileRoute("/printers")({
 
 const empty = { name: "", model: "", kwh_consumption: 120, hourly_rate: 10, status: "idle" };
 
+const printerModels = [
+  { value: "Bambu Lab P1S", label: "Bambu Lab P1S", image: bambuP1s },
+  { value: "Creality Ender 3 S1", label: "Creality Ender 3 S1", image: enderS1 },
+  { value: "Prusa i3 MK3S+", label: "Prusa i3 MK3S+", image: prusaMk3s },
+] as const;
+
+function printerImage(model: string) {
+  const normalized = model.toLowerCase();
+  if (normalized.includes("ender") || normalized.includes("creality")) return enderS1;
+  if (normalized.includes("prusa") || normalized.includes("mk3")) return prusaMk3s;
+  return bambuP1s;
+}
+
 function Printers() {
   const { data: printers = [] } = usePrinters();
   const { data: jobs = [] } = useJobs();
@@ -87,7 +103,11 @@ function Printers() {
             const remainingMinutes = current ? Math.max(1, Math.round((Number(current.print_time_hours) - elapsedHours) * 60)) : 0;
             return (
               <article key={p.id} className={`group relative overflow-hidden border bg-surface p-5 transition-colors ${p.status === "error" ? "border-rose-accent/30 hover:border-rose-accent/60" : "border-border hover:border-primary/45"}`}>
-                <div className="printer-grid absolute inset-x-0 top-0 h-24 opacity-20" />
+                <div className="relative -mx-5 -mt-5 mb-5 h-40 overflow-hidden border-b border-border bg-background">
+                  <img src={printerImage(p.model)} alt={`Impressora ${p.model}`} loading="lazy" width={1200} height={912} className="h-full w-full object-cover object-center opacity-90 transition duration-300 group-hover:scale-[1.02] group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
+                  <span className="label-tag absolute bottom-3 left-5 text-[9px] text-primary">Node-{String(index + 1).padStart(2, "0")}</span>
+                </div>
                 <div className="relative flex items-start justify-between gap-3">
                   <div><span className="label-tag text-[9px] text-primary">Node-{String(index + 1).padStart(2, "0")}</span><h2 className="mt-1 text-lg font-bold">{p.name}</h2><p className="mt-0.5 text-xs text-muted-foreground">{p.model}</p></div>
                   <StatusPill status={p.status} />
@@ -121,12 +141,13 @@ function Printers() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="m">Modelo</Label>
-            <Input
-              id="m"
-              value={form.model}
-              onChange={(e) => setForm({ ...form, model: e.target.value })}
-              placeholder="Bambu Lab P1S"
-            />
+            <Select value={form.model} onValueChange={(model) => setForm({ ...form, model })}>
+              <SelectTrigger id="m"><SelectValue placeholder="Selecione o modelo" /></SelectTrigger>
+              <SelectContent>
+                {printerModels.map((model) => <SelectItem key={model.value} value={model.value}>{model.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            {form.model ? <div className="relative mt-3 aspect-[4/3] overflow-hidden border border-border bg-background"><img src={printerImage(form.model)} alt={`Prévia da ${form.model}`} loading="lazy" width={1200} height={912} className="h-full w-full object-cover" /><div className="absolute inset-x-0 bottom-0 bg-background/85 px-3 py-2 text-[10px] font-medium backdrop-blur">{form.model}</div></div> : null}
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
