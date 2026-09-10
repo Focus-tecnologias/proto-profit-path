@@ -5,6 +5,7 @@ import {
   ListOrdered,
   Boxes,
   Package,
+  Activity,
   Printer as PrinterIcon,
   PieChart,
 } from "lucide-react";
@@ -18,6 +19,7 @@ const nav = [
   { to: "/inventory", label: "Filamento", icon: Boxes },
   { to: "/products", label: "Produtos", icon: Package },
   { to: "/printers", label: "Impressoras", icon: PrinterIcon },
+  { to: "/operations", label: "Operacional", icon: Activity },
   { to: "/revenue", label: "Receita", icon: PieChart },
 ] as const;
 
