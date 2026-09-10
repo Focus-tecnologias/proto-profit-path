@@ -109,7 +109,7 @@ function Printers() {
                   <span className="label-tag absolute bottom-3 left-5 text-[9px] text-primary">Node-{String(index + 1).padStart(2, "0")}</span>
                 </div>
                 <div className="relative flex items-start justify-between gap-3">
-                  <div><span className="label-tag text-[9px] text-primary">Node-{String(index + 1).padStart(2, "0")}</span><h2 className="mt-1 text-lg font-bold">{p.name}</h2><p className="mt-0.5 text-xs text-muted-foreground">{p.model}</p></div>
+                  <div><h2 className="text-lg font-bold">{p.name}</h2><p className="mt-0.5 text-xs text-muted-foreground">{p.model}</p></div>
                   <StatusPill status={p.status} />
                 </div>
 
