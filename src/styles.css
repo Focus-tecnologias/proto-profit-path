@@ -34,6 +34,7 @@
   --color-ring-offset-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-raised: var(--surface-raised);
+  --color-sidebar: var(--sidebar);
   --color-emerald-accent: var(--emerald-accent);
   --color-amber-accent: var(--amber-accent);
   --color-cyan-accent: var(--cyan-accent);
