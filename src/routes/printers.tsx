@@ -4,9 +4,15 @@ import { Box, CircleAlert, Clock3, Gauge, Plus, Printer as PrinterIcon, Zap } fr
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
 import { StatusPill } from "@/components/StatusPill";
+import bambuA1Mini from "@/assets/printer-bambu-a1-mini.jpg";
 import bambuP1s from "@/assets/printer-bambu-p1s.jpg";
+import bambuX1Carbon from "@/assets/printer-bambu-x1-carbon.jpg";
+import anycubicKobra2 from "@/assets/printer-anycubic-kobra2.jpg";
+import crealityK1 from "@/assets/printer-creality-k1.jpg";
+import enderV2Neo from "@/assets/printer-ender-v2-neo.jpg";
 import enderS1 from "@/assets/printer-ender-s1.jpg";
 import prusaMk3s from "@/assets/printer-prusa-mk3s.jpg";
+import prusaMk4 from "@/assets/printer-prusa-mk4.jpg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
