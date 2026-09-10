@@ -5,6 +5,7 @@ import {
   ListOrdered,
   Boxes,
   Package,
+  Activity,
   Printer as PrinterIcon,
   PieChart,
 } from "lucide-react";
