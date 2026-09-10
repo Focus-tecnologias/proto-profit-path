@@ -90,7 +90,7 @@ function Dashboard() {
 
   return (
     <AppShell
-      title="Painel da Fazenda"
+      title="Painel da Fabrica"
       subtitle="Operação em tempo real de cada máquina, bobina e trabalho aberto."
     >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
