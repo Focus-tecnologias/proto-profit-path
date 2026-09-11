@@ -58,14 +58,31 @@ const empty = { name: "", model: "", kwh_consumption: 120, hourly_rate: 10, stat
 
 const printerModels = [
   { value: "Bambu Lab P1S", label: "Bambu Lab P1S", image: bambuP1s },
+  { value: "Bambu Lab A1 mini", label: "Bambu Lab A1 mini", image: bambuA1Mini },
+  { value: "Bambu Lab X1 Carbon", label: "Bambu Lab X1 Carbon", image: bambuX1Carbon },
   { value: "Creality Ender 3 S1", label: "Creality Ender 3 S1", image: enderS1 },
+  { value: "Creality Ender 3 V2 Neo", label: "Creality Ender 3 V2 Neo", image: enderV2Neo },
+  { value: "Creality K1", label: "Creality K1", image: crealityK1 },
   { value: "Prusa i3 MK3S+", label: "Prusa i3 MK3S+", image: prusaMk3s },
+  { value: "Prusa i3 MK4", label: "Prusa i3 MK4", image: prusaMk4 },
+  { value: "Anycubic Kobra 2", label: "Anycubic Kobra 2", image: anycubicKobra2 },
 ] as const;
 
 function printerImage(model: string) {
+  const match = printerModels.find((m) => m.value.toLowerCase() === model.toLowerCase());
+  if (match) return match.image;
   const normalized = model.toLowerCase();
+  if (normalized.includes("a1 mini")) return bambuA1Mini;
+  if (normalized.includes("x1 carbon")) return bambuX1Carbon;
+  if (normalized.includes("p1")) return bambuP1s;
+  if (normalized.includes("v2 neo")) return enderV2Neo;
+  if (normalized.includes("ender 3 s1")) return enderS1;
+  if (normalized.includes("k1")) return crealityK1;
+  if (normalized.includes("mk4")) return prusaMk4;
+  if (normalized.includes("mk3")) return prusaMk3s;
+  if (normalized.includes("kobra")) return anycubicKobra2;
   if (normalized.includes("ender") || normalized.includes("creality")) return enderS1;
-  if (normalized.includes("prusa") || normalized.includes("mk3")) return prusaMk3s;
+  if (normalized.includes("prusa")) return prusaMk3s;
   return bambuP1s;
 }
 
