@@ -120,6 +120,8 @@ function ProductsPage() {
     }
     await upsert.mutateAsync({ patch: { ...form, name: form.name.trim() } });
     setForm({ ...EMPTY });
+    setPreview(null);
+    if (fileRef.current) fileRef.current.value = "";
     toast.success("Produto cadastrado no estoque.");
   }
 
