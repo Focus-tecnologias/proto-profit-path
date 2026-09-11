@@ -1,6 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { Minus, Package, Plus, Search, Trash2, TriangleAlert } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import {
+  ImagePlus,
+  Loader2,
+  Minus,
+  Package,
+  Plus,
+  Search,
+  Trash2,
+  TriangleAlert,
+} from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
@@ -9,7 +18,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   money,
+  uploadProductPhoto,
   useDeleteProduct,
+  useProductPhotoUrls,
   useProducts,
   useSettings,
   useUpsertProduct,
@@ -47,6 +58,7 @@ const EMPTY = {
   sale_price: 0,
   quantity: 0,
   min_quantity: 5,
+  image_path: null as string | null,
 };
 
 function ProductsPage() {
@@ -58,6 +70,32 @@ function ProductsPage() {
 
   const [form, setForm] = useState({ ...EMPTY });
   const [search, setSearch] = useState("");
+  const [uploading, setUploading] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const { data: photoUrls = {} } = useProductPhotoUrls(products.map((p) => p.image_path));
+
+  async function handleUpload(file: File, product?: Product) {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Selecione um arquivo de imagem.");
+      return;
+    }
+    setUploading(product?.id ?? "new");
+    try {
+      const path = await uploadProductPhoto(file);
+      if (product) {
+        await upsert.mutateAsync({ id: product.id, patch: { image_path: path } });
+      } else {
+        setForm((f) => ({ ...f, image_path: path }));
+        setPreview(URL.createObjectURL(file));
+      }
+      toast.success("Foto enviada.");
+    } catch {
+      toast.error("Não foi possível enviar a foto.");
+    } finally {
+      setUploading(null);
+    }
+  }
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -82,6 +120,8 @@ function ProductsPage() {
     }
     await upsert.mutateAsync({ patch: { ...form, name: form.name.trim() } });
     setForm({ ...EMPTY });
+    setPreview(null);
+    if (fileRef.current) fileRef.current.value = "";
     toast.success("Produto cadastrado no estoque.");
   }
 
@@ -209,6 +249,42 @@ function ProductsPage() {
             />
           </div>
 
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground">Foto do produto</Label>
+            <div className="flex items-center gap-3">
+              <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-surface-raised">
+                {preview ? (
+                  <img src={preview} alt="Pré-visualização do produto" className="size-full object-cover" />
+                ) : (
+                  <ImagePlus className="size-5 text-muted-foreground" />
+                )}
+              </div>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) void handleUpload(file);
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading === "new"}
+              >
+                {uploading === "new" ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <ImagePlus className="size-4" />
+                )}
+                Enviar foto
+              </Button>
+            </div>
+          </div>
+
           <Button className="w-full" onClick={create} disabled={upsert.isPending}>
             <Plus className="size-4" /> Cadastrar produto
           </Button>
@@ -241,6 +317,12 @@ function ProductsPage() {
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="flex items-start gap-3">
+                        <ProductPhoto
+                          product={p}
+                          url={p.image_path ? photoUrls[p.image_path] : undefined}
+                          busy={uploading === p.id}
+                          onPick={(file) => void handleUpload(file, p)}
+                        />
                         <span
                           className="mt-1 size-3.5 shrink-0 rounded-full border border-border"
                           style={{ backgroundColor: p.color_hex }}
@@ -331,5 +413,51 @@ function Stat({
       <p className="label-tag">{label}</p>
       <p className={`num mt-1 text-2xl font-semibold ${className}`}>{value}</p>
     </div>
+  );
+}
+
+function ProductPhoto({
+  product,
+  url,
+  busy,
+  onPick,
+}: {
+  product: Product;
+  url?: string | undefined;
+  busy: boolean;
+  onPick: (file: File) => void;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  return (
+    <button
+      type="button"
+      onClick={() => ref.current?.click()}
+      className="group relative size-16 shrink-0 overflow-hidden rounded-lg border border-border bg-surface-raised"
+      aria-label={`Enviar foto de ${product.name}`}
+    >
+      {url ? (
+        <img src={url} alt={product.name} className="size-full object-cover" />
+      ) : (
+        <span className="flex size-full items-center justify-center">
+          <ImagePlus className="size-4 text-muted-foreground" />
+        </span>
+      )}
+      {busy ? (
+        <span className="absolute inset-0 flex items-center justify-center bg-background/70">
+          <Loader2 className="size-4 animate-spin" />
+        </span>
+      ) : null}
+      <input
+        ref={ref}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) onPick(file);
+          e.target.value = "";
+        }}
+      />
+    </button>
   );
 }

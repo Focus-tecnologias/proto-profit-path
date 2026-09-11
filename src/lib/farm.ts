@@ -297,9 +297,41 @@ export type Product = {
   sale_price: number;
   quantity: number;
   min_quantity: number;
+  image_path: string | null;
   created_at: string;
   updated_at: string;
 };
+
+export const PRODUCT_PHOTO_BUCKET = "product-photos";
+
+export async function uploadProductPhoto(file: File) {
+  const ext = (file.name.split(".").pop() ?? "jpg").toLowerCase();
+  const path = `${crypto.randomUUID()}.${ext}`;
+  const { error } = await supabase.storage
+    .from(PRODUCT_PHOTO_BUCKET)
+    .upload(path, file, { upsert: true, contentType: file.type || "image/jpeg" });
+  if (error) throw error;
+  return path;
+}
+
+export function useProductPhotoUrls(paths: (string | null | undefined)[]) {
+  const key = paths.filter(Boolean).sort().join("|");
+  return useQuery({
+    queryKey: ["product-photo-urls", key],
+    queryFn: async () => {
+      const list = key ? key.split("|") : [];
+      const map: Record<string, string> = {};
+      if (!list.length) return map;
+      const { data } = await supabase.storage
+        .from(PRODUCT_PHOTO_BUCKET)
+        .createSignedUrls(list, 60 * 60);
+      for (const item of data ?? []) {
+        if (item.path && item.signedUrl) map[item.path] = item.signedUrl;
+      }
+      return map;
+    },
+  });
+}
 
 export const useProducts = () =>
   useQuery({ queryKey: ["products"], queryFn: () => table<Product>("products", "name") });
