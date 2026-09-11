@@ -423,7 +423,7 @@ function ProductPhoto({
   onPick,
 }: {
   product: Product;
-  url?: string;
+  url?: string | undefined;
   busy: boolean;
   onPick: (file: File) => void;
 }) {
