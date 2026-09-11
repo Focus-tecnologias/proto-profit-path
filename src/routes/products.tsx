@@ -70,6 +70,32 @@ function ProductsPage() {
 
   const [form, setForm] = useState({ ...EMPTY });
   const [search, setSearch] = useState("");
+  const [uploading, setUploading] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const { data: photoUrls = {} } = useProductPhotoUrls(products.map((p) => p.image_path));
+
+  async function handleUpload(file: File, product?: Product) {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Selecione um arquivo de imagem.");
+      return;
+    }
+    setUploading(product?.id ?? "new");
+    try {
+      const path = await uploadProductPhoto(file);
+      if (product) {
+        await upsert.mutateAsync({ id: product.id, patch: { image_path: path } });
+      } else {
+        setForm((f) => ({ ...f, image_path: path }));
+        setPreview(URL.createObjectURL(file));
+      }
+      toast.success("Foto enviada.");
+    } catch {
+      toast.error("Não foi possível enviar a foto.");
+    } finally {
+      setUploading(null);
+    }
+  }
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
