@@ -67,10 +67,10 @@ export function AppShell({
       >
         <div className="flex h-20 items-center border-b border-border px-5">
           <Link to="/" className="flex items-center gap-3">
-            <img src={logo.url} alt="Fabruca" className="h-8 w-auto" />
+            <img src={logo.url} alt="Focus Lab" className="h-8 w-auto" />
             {!collapsed && (
               <div>
-                <span className="block text-sm font-bold uppercase text-foreground">Fabruca</span>
+                <span className="block text-sm font-bold uppercase text-foreground">Focus Lab</span>
                 <span className="label-tag block text-[9px] text-primary">Production OS</span>
               </div>
             )}
