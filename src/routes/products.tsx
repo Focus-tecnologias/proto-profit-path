@@ -1,6 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { Minus, Package, Plus, Search, Trash2, TriangleAlert } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import {
+  ImagePlus,
+  Loader2,
+  Minus,
+  Package,
+  Plus,
+  Search,
+  Trash2,
+  TriangleAlert,
+} from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
