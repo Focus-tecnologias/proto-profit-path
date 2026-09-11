@@ -76,22 +76,28 @@ export function AppShell({
             )}
           </Link>
         </div>
-        <nav className="flex flex-1 flex-col gap-1 px-3 py-5">
-          {!collapsed && <p className="label-tag px-3 pb-2 text-[9px]">Central de controle</p>}
-          {nav.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              activeOptions={{ exact: item.to === "/" }}
-              title={item.label}
-              className="group flex items-center gap-3 rounded-md border border-transparent px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              activeProps={{
-                className: "border-primary/20 bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary",
-              }}
-            >
-              <item.icon className="size-4" />
-              {!collapsed && <span>{item.label}</span>}
-            </Link>
+        <nav className="flex flex-1 flex-col gap-4 px-3 py-5">
+          {groups.map((group) => (
+            <div key={group.title}>
+              {!collapsed && <p className="label-tag px-3 pb-2 text-[9px]">{group.title}</p>}
+              <div className="flex flex-col gap-1">
+                {group.items.map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    activeOptions={{ exact: item.to === "/" }}
+                    title={item.label}
+                    className="group flex items-center gap-3 rounded-md border border-transparent px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                    activeProps={{
+                      className: "border-primary/20 bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary",
+                    }}
+                  >
+                    <item.icon className="size-4" />
+                    {!collapsed && <span>{item.label}</span>}
+                  </Link>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
         <div className="border-t border-border p-4">
