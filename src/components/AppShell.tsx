@@ -34,47 +34,66 @@ export function AppShell({
   subtitle?: string;
   children: ReactNode;
 }) {
+  const [collapsed, setCollapsed] = useState(false);
+  const sidebarWidth = collapsed ? "md:pl-16" : "md:pl-60";
+
   return (
-    <div className="min-h-screen md:pl-60">
-      <aside className="border-border bg-sidebar fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r md:flex">
+    <div className={`min-h-screen ${sidebarWidth}`}>
+      <aside
+        className={`border-border bg-sidebar fixed inset-y-0 left-0 z-40 hidden flex-col border-r transition-all duration-200 md:flex ${
+          collapsed ? "w-16" : "w-60"
+        }`}
+      >
         <div className="flex h-20 items-center border-b border-border px-5">
           <Link to="/" className="flex items-center gap-3">
             <img src={logo.url} alt="Fabruca" className="h-8 w-auto" />
-            <div>
-              <span className="block text-sm font-bold uppercase text-foreground">Fabruca</span>
-              <span className="label-tag block text-[9px] text-primary">Production OS</span>
-            </div>
+            {!collapsed && (
+              <div>
+                <span className="block text-sm font-bold uppercase text-foreground">Fabruca</span>
+                <span className="label-tag block text-[9px] text-primary">Production OS</span>
+              </div>
+            )}
           </Link>
         </div>
         <nav className="flex flex-1 flex-col gap-1 px-3 py-5">
-          <p className="label-tag px-3 pb-2 text-[9px]">Central de controle</p>
-            {nav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                activeOptions={{ exact: item.to === "/" }}
-                className="group flex items-center gap-3 rounded-md border border-transparent px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                activeProps={{
-                  className: "border-primary/20 bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary",
-                }}
-              >
-                <item.icon className="size-4" />
-                <span>{item.label}</span>
-              </Link>
-            ))}
+          {!collapsed && <p className="label-tag px-3 pb-2 text-[9px]">Central de controle</p>}
+          {nav.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              activeOptions={{ exact: item.to === "/" }}
+              title={item.label}
+              className="group flex items-center gap-3 rounded-md border border-transparent px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              activeProps={{
+                className: "border-primary/20 bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary",
+              }}
+            >
+              <item.icon className="size-4" />
+              {!collapsed && <span>{item.label}</span>}
+            </Link>
+          ))}
         </nav>
         <div className="border-t border-border p-4">
-          <div className="flex items-center gap-3 rounded-md bg-background/60 px-3 py-3">
+          <button
+            type="button"
+            onClick={() => setCollapsed((c) => !c)}
+            className="flex w-full items-center gap-3 rounded-md bg-background/60 px-3 py-3 text-left transition-colors hover:bg-accent"
+          >
             <span className="relative flex size-2">
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-accent opacity-50" />
               <span className="relative inline-flex size-2 rounded-full bg-emerald-accent" />
             </span>
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold">Sistema operacional</p>
-              <p className="text-[10px] text-muted-foreground">Sincronização ativa</p>
-            </div>
-            <PanelLeftClose className="size-4 text-muted-foreground" />
-          </div>
+            {!collapsed && (
+              <>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-semibold">Sistema operacional</p>
+                  <p className="text-[10px] text-muted-foreground">Sincronização ativa</p>
+                </div>
+                <PanelLeftClose className="size-4 text-muted-foreground" />
+              </>
+            )}
+            {collapsed && <PanelLeft className="size-4 text-muted-foreground" />}
+          </button>
         </div>
       </aside>
 
