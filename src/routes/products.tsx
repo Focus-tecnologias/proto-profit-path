@@ -415,3 +415,49 @@ function Stat({
     </div>
   );
 }
+
+function ProductPhoto({
+  product,
+  url,
+  busy,
+  onPick,
+}: {
+  product: Product;
+  url?: string;
+  busy: boolean;
+  onPick: (file: File) => void;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  return (
+    <button
+      type="button"
+      onClick={() => ref.current?.click()}
+      className="group relative size-16 shrink-0 overflow-hidden rounded-lg border border-border bg-surface-raised"
+      aria-label={`Enviar foto de ${product.name}`}
+    >
+      {url ? (
+        <img src={url} alt={product.name} className="size-full object-cover" />
+      ) : (
+        <span className="flex size-full items-center justify-center">
+          <ImagePlus className="size-4 text-muted-foreground" />
+        </span>
+      )}
+      {busy ? (
+        <span className="absolute inset-0 flex items-center justify-center bg-background/70">
+          <Loader2 className="size-4 animate-spin" />
+        </span>
+      ) : null}
+      <input
+        ref={ref}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) onPick(file);
+          e.target.value = "";
+        }}
+      />
+    </button>
+  );
+}
