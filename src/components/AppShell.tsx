@@ -139,7 +139,7 @@ export function AppShell({
 
       <main className="mx-auto max-w-[1600px] px-4 py-7 sm:px-7 lg:px-10">
         <div className="mb-7 border-b border-border pb-5">
-          <p className="label-tag mb-2 text-primary">Fabruca / Operação</p>
+          <p className="label-tag mb-2 text-primary">FOCUS LAB / OPERAÇÃO</p>
           <h1 className="text-3xl font-bold sm:text-4xl">{title}</h1>
           {subtitle ? <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{subtitle}</p> : null}
         </div>
