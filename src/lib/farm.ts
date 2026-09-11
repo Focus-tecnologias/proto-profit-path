@@ -309,7 +309,7 @@ export async function uploadProductPhoto(file: File) {
   const path = `${crypto.randomUUID()}.${ext}`;
   const { error } = await supabase.storage
     .from(PRODUCT_PHOTO_BUCKET)
-    .upload(path, file, { upsert: true, contentType: file.type || undefined });
+    .upload(path, file, { upsert: true, contentType: file.type || "image/jpeg" });
   if (error) throw error;
   return path;
 }
