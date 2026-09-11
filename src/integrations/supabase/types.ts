@@ -290,6 +290,7 @@ export type Database = {
           created_at: string
           description: string
           id: string
+          image_path: string | null
           min_quantity: number
           name: string
           quantity: number
@@ -304,6 +305,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
+          image_path?: string | null
           min_quantity?: number
           name: string
           quantity?: number
@@ -318,6 +320,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
+          image_path?: string | null
           min_quantity?: number
           name?: string
           quantity?: number
