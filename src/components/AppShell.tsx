@@ -14,16 +14,37 @@ import {
 import { useState, type ReactNode } from "react";
 import logo from "@/assets/focus-logo.png.asset.json";
 
-const nav = [
-  { to: "/", label: "Painel", icon: LayoutDashboard },
-  { to: "/estimator", label: "Orçamento", icon: Calculator },
-  { to: "/queue", label: "Fila", icon: ListOrdered },
-  { to: "/inventory", label: "Filamento", icon: Boxes },
-  { to: "/products", label: "Produtos", icon: Package },
-  { to: "/printers", label: "Impressoras", icon: PrinterIcon },
-  { to: "/operations", label: "Operacional", icon: Activity },
-  { to: "/revenue", label: "Receita", icon: PieChart },
-] as const;
+type NavItem = { to: string; label: string; icon: React.ElementType };
+
+const groups: { title: string; items: NavItem[] }[] = [
+  {
+    title: "Central de controle",
+    items: [{ to: "/", label: "Painel", icon: LayoutDashboard }],
+  },
+  {
+    title: "Orçamento",
+    items: [{ to: "/estimator", label: "Orçamento", icon: Calculator }],
+  },
+  {
+    title: "Operação",
+    items: [
+      { to: "/operations", label: "Operacional", icon: Activity },
+      { to: "/printers", label: "Impressoras", icon: PrinterIcon },
+      { to: "/queue", label: "Fila", icon: ListOrdered },
+    ],
+  },
+  {
+    title: "Estoque",
+    items: [
+      { to: "/products", label: "Produtos", icon: Package },
+      { to: "/inventory", label: "Filamentos", icon: Boxes },
+    ],
+  },
+  {
+    title: "Receita",
+    items: [{ to: "/revenue", label: "Receita", icon: PieChart }],
+  },
+];
 
 export function AppShell({
   title,
@@ -55,22 +76,28 @@ export function AppShell({
             )}
           </Link>
         </div>
-        <nav className="flex flex-1 flex-col gap-1 px-3 py-5">
-          {!collapsed && <p className="label-tag px-3 pb-2 text-[9px]">Central de controle</p>}
-          {nav.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              activeOptions={{ exact: item.to === "/" }}
-              title={item.label}
-              className="group flex items-center gap-3 rounded-md border border-transparent px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              activeProps={{
-                className: "border-primary/20 bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary",
-              }}
-            >
-              <item.icon className="size-4" />
-              {!collapsed && <span>{item.label}</span>}
-            </Link>
+        <nav className="flex flex-1 flex-col gap-4 px-3 py-5">
+          {groups.map((group) => (
+            <div key={group.title}>
+              {!collapsed && <p className="label-tag px-3 pb-2 text-[9px]">{group.title}</p>}
+              <div className="flex flex-col gap-1">
+                {group.items.map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    activeOptions={{ exact: item.to === "/" }}
+                    title={item.label}
+                    className="group flex items-center gap-3 rounded-md border border-transparent px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                    activeProps={{
+                      className: "border-primary/20 bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary",
+                    }}
+                  >
+                    <item.icon className="size-4" />
+                    {!collapsed && <span>{item.label}</span>}
+                  </Link>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
         <div className="border-t border-border p-4">
@@ -101,7 +128,7 @@ export function AppShell({
         <div className="flex items-center gap-4 overflow-x-auto px-4 py-3">
           <Link to="/" className="shrink-0"><img src={logo.url} alt="Fabruca" className="h-7 w-auto" /></Link>
           <nav className="flex gap-1">
-            {nav.map((item) => (
+            {groups.flatMap((g) => g.items).map((item) => (
               <Link key={item.to} to={item.to} activeOptions={{ exact: item.to === "/" }} className="flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-xs text-muted-foreground" activeProps={{ className: "bg-primary/10 text-primary" }}>
                 <item.icon className="size-4" /><span>{item.label}</span>
               </Link>
