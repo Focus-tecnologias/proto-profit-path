@@ -18,7 +18,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   money,
+  uploadProductPhoto,
   useDeleteProduct,
+  useProductPhotoUrls,
   useProducts,
   useSettings,
   useUpsertProduct,
