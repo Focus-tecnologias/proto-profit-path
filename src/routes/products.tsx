@@ -58,6 +58,7 @@ const EMPTY = {
   sale_price: 0,
   quantity: 0,
   min_quantity: 5,
+  image_path: null as string | null,
 };
 
 function ProductsPage() {
