@@ -9,8 +9,9 @@ import {
   Printer as PrinterIcon,
   PieChart,
   PanelLeftClose,
+  PanelLeft,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import logo from "@/assets/focus-logo.png.asset.json";
 
 const nav = [
