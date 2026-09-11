@@ -128,7 +128,7 @@ export function AppShell({
         <div className="flex items-center gap-4 overflow-x-auto px-4 py-3">
           <Link to="/" className="shrink-0"><img src={logo.url} alt="Fabruca" className="h-7 w-auto" /></Link>
           <nav className="flex gap-1">
-            {nav.map((item) => (
+            {groups.flatMap((g) => g.items).map((item) => (
               <Link key={item.to} to={item.to} activeOptions={{ exact: item.to === "/" }} className="flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-xs text-muted-foreground" activeProps={{ className: "bg-primary/10 text-primary" }}>
                 <item.icon className="size-4" /><span>{item.label}</span>
               </Link>
