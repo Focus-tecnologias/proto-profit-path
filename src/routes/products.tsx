@@ -317,6 +317,12 @@ function ProductsPage() {
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="flex items-start gap-3">
+                        <ProductPhoto
+                          product={p}
+                          url={p.image_path ? photoUrls[p.image_path] : undefined}
+                          busy={uploading === p.id}
+                          onPick={(file) => void handleUpload(file, p)}
+                        />
                         <span
                           className="mt-1 size-3.5 shrink-0 rounded-full border border-border"
                           style={{ backgroundColor: p.color_hex }}
