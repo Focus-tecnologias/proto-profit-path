@@ -249,6 +249,42 @@ function ProductsPage() {
             />
           </div>
 
+          <div className="space-y-2">
+            <Label className="text-xs text-muted-foreground">Foto do produto</Label>
+            <div className="flex items-center gap-3">
+              <div className="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-surface-raised">
+                {preview ? (
+                  <img src={preview} alt="Pré-visualização do produto" className="size-full object-cover" />
+                ) : (
+                  <ImagePlus className="size-5 text-muted-foreground" />
+                )}
+              </div>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) void handleUpload(file);
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading === "new"}
+              >
+                {uploading === "new" ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <ImagePlus className="size-4" />
+                )}
+                Enviar foto
+              </Button>
+            </div>
+          </div>
+
           <Button className="w-full" onClick={create} disabled={upsert.isPending}>
             <Plus className="size-4" /> Cadastrar produto
           </Button>
