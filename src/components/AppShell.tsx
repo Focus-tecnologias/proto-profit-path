@@ -14,16 +14,37 @@ import {
 import { useState, type ReactNode } from "react";
 import logo from "@/assets/focus-logo.png.asset.json";
 
-const nav = [
-  { to: "/", label: "Painel", icon: LayoutDashboard },
-  { to: "/estimator", label: "Orçamento", icon: Calculator },
-  { to: "/queue", label: "Fila", icon: ListOrdered },
-  { to: "/inventory", label: "Filamento", icon: Boxes },
-  { to: "/products", label: "Produtos", icon: Package },
-  { to: "/printers", label: "Impressoras", icon: PrinterIcon },
-  { to: "/operations", label: "Operacional", icon: Activity },
-  { to: "/revenue", label: "Receita", icon: PieChart },
-] as const;
+type NavItem = { to: string; label: string; icon: React.ElementType };
+
+const groups: { title: string; items: NavItem[] }[] = [
+  {
+    title: "Central de controle",
+    items: [{ to: "/", label: "Painel", icon: LayoutDashboard }],
+  },
+  {
+    title: "Orçamento",
+    items: [{ to: "/estimator", label: "Orçamento", icon: Calculator }],
+  },
+  {
+    title: "Operação",
+    items: [
+      { to: "/operations", label: "Operacional", icon: Activity },
+      { to: "/printers", label: "Impressoras", icon: PrinterIcon },
+      { to: "/queue", label: "Fila", icon: ListOrdered },
+    ],
+  },
+  {
+    title: "Estoque",
+    items: [
+      { to: "/products", label: "Produtos", icon: Package },
+      { to: "/inventory", label: "Filamentos", icon: Boxes },
+    ],
+  },
+  {
+    title: "Receita",
+    items: [{ to: "/revenue", label: "Receita", icon: PieChart }],
+  },
+];
 
 export function AppShell({
   title,
