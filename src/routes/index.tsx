@@ -277,7 +277,7 @@ function Dashboard() {
                 </Link>
               </div>
 
-              {/* Vertical Stack on Mobile, Grid on Tablet/Desktop */}
+              {/* Vertical Stack on Mobile, Grid on Tablet/Desktop - Zero horizontal scroll */}
               {printerCardsData.length === 0 ? (
                 <div className="py-10 px-4 text-center">
                   <PrinterIcon className="size-8 text-zinc-600 mx-auto mb-2" />
@@ -294,7 +294,7 @@ function Dashboard() {
                   </Link>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
+                <div className="flex flex-col gap-3.5 md:grid md:grid-cols-2 xl:grid-cols-3 md:gap-4 w-full">
                   {printerCardsData.slice(0, 3).map((p) => {
                     const isPrinting = p.status === "printing";
                     const isIdle = p.status === "idle";
@@ -302,37 +302,42 @@ function Dashboard() {
                     return (
                       <div
                         key={p.id}
-                        className={`group relative flex flex-col justify-between rounded-2xl p-3.5 sm:p-4 transition-all duration-300 backdrop-blur-xl w-full ${
+                        className={`group relative flex flex-col justify-between rounded-2xl p-3.5 sm:p-4 transition-all duration-300 backdrop-blur-xl w-full overflow-hidden ${
                           isPrinting
                             ? "border border-[#ff6600]/90 bg-[#1a1816]/90 shadow-[0_0_22px_rgba(255,102,0,0.2)]"
                             : "border border-white/[0.08] bg-[#18191f]/60 hover:border-white/[0.18] hover:bg-[#1c1d24]/70"
                         }`}
                       >
-                        {/* Top Row: Status Pill on Right & 3-dots */}
-                        <div className="flex items-center justify-end gap-1.5 mb-1.5">
-                          {isPrinting ? (
-                            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400 shadow-sm">
-                              <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                              Em produção
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold text-zinc-400">
-                              <span className="size-1.5 rounded-full bg-zinc-500" />
-                              Indisponível
-                            </span>
-                          )}
-                          <Link
-                            to="/printers"
-                            className="size-6 flex items-center justify-center rounded text-zinc-400 hover:text-white transition-colors"
-                            title="Opções da impressora"
-                          >
-                            <MoreHorizontal className="size-4" />
-                          </Link>
+                        {/* Top Row: Name on Left, Status Pill & Options on Right */}
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight truncate min-w-0">
+                            {p.name}
+                          </h3>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {isPrinting ? (
+                              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400 shadow-sm">
+                                <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                                Em produção
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold text-zinc-400">
+                                <span className="size-1.5 rounded-full bg-zinc-500" />
+                                Indisponível
+                              </span>
+                            )}
+                            <Link
+                              to="/printers"
+                              className="size-6 flex items-center justify-center rounded text-zinc-400 hover:text-white transition-colors"
+                              title="Opções da impressora"
+                            >
+                              <MoreHorizontal className="size-4" />
+                            </Link>
+                          </div>
                         </div>
 
                         {/* Middle Content: Printer Image (Left) + Details (Right) */}
                         <div className="flex items-center gap-3 my-1">
-                          <div className="w-20 sm:w-24 h-20 sm:h-24 shrink-0 flex items-center justify-center overflow-hidden rounded-xl bg-black/30 p-1 border border-white/[0.04]">
+                          <div className="size-18 sm:size-22 shrink-0 flex items-center justify-center overflow-hidden rounded-xl bg-black/40 p-1 border border-white/[0.05]">
                             <img
                               src={p.image}
                               alt={p.name}
@@ -341,38 +346,32 @@ function Dashboard() {
                           </div>
 
                           <div className="min-w-0 flex-1 space-y-1 sm:space-y-1.5">
-                            <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight truncate">
-                              {p.name}
-                            </h3>
-
-                            <div className="flex items-center gap-1 text-[10px] sm:text-[11px] text-zinc-300 truncate">
+                            <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-zinc-300 truncate">
                               <Box className="size-3 text-zinc-400 shrink-0" />
-                              <span className="truncate">Peça: {p.hasJob ? p.jobName : "Nenhuma peça em produção"}</span>
+                              <span className="truncate">{p.hasJob ? p.jobName : "Nenhuma peça em produção"}</span>
                             </div>
 
                             {/* Progress bar */}
                             <div className="space-y-1 pt-0.5">
-                              <p className="text-[9px] sm:text-[10px] text-zinc-400">Progresso da impressão</p>
-                              <div className="flex items-center gap-2">
-                                <div className="h-1.5 flex-1 rounded-full bg-white/10 overflow-hidden">
-                                  <div
-                                    className="h-full rounded-full bg-[#ff6600] transition-all duration-500"
-                                    style={{ width: `${p.progress}%` }}
-                                  />
-                                </div>
-                                <span className="text-[10px] sm:text-[11px] font-bold font-mono text-white">
-                                  {p.progress}%
-                                </span>
+                              <div className="flex items-center justify-between text-[10px] text-zinc-400">
+                                <span>Progresso</span>
+                                <span className="font-mono font-bold text-white text-[11px]">{p.progress}%</span>
+                              </div>
+                              <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+                                <div
+                                  className="h-full rounded-full bg-[#ff6600] transition-all duration-500"
+                                  style={{ width: `${p.progress}%` }}
+                                />
                               </div>
                             </div>
                           </div>
                         </div>
 
-                        {/* Bottom Row: 3 Metrics */}
-                        <div className="mt-3.5 pt-2.5 border-t border-white/[0.06] flex items-center justify-between text-[9.5px] sm:text-[10px]">
-                          {/* Left: Disponível / Indisponível pill */}
+                        {/* Bottom Row: Telemetry Metrics */}
+                        <div className="mt-3 pt-2.5 border-t border-white/[0.06] flex items-center justify-between gap-1.5 text-[10px] sm:text-[11px]">
+                          {/* Left: Status Tag */}
                           <span
-                            className={`px-2 py-0.5 rounded-md font-bold flex items-center gap-1.5 ${
+                            className={`px-2 py-0.5 rounded-md font-bold flex items-center gap-1.5 shrink-0 ${
                               isPrinting || isIdle
                                 ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
                                 : "bg-white/5 border border-white/10 text-zinc-400"
@@ -383,16 +382,16 @@ function Dashboard() {
                           </span>
 
                           {/* Center: Temperatures + PLA */}
-                          <div className="flex items-center gap-1 text-[#ff8533] font-medium">
+                          <div className="flex items-center gap-1 text-[#ff8533] font-medium shrink-0">
                             <Thermometer className="size-3 text-[#ff6600]" />
                             <span>{p.nozzleTempStr}</span>
-                            <span className="text-zinc-500 ml-0.5">{p.material}</span>
+                            <span className="text-zinc-500">{p.material}</span>
                           </div>
 
                           {/* Right: Time Remaining */}
-                          <div className="flex items-center gap-1 text-zinc-400 truncate max-w-[90px] sm:max-w-none">
+                          <div className="flex items-center gap-1 text-zinc-400 truncate shrink-0">
                             <Clock className="size-3 text-zinc-500 shrink-0" />
-                            <span className="truncate">{p.timeRemaining}</span>
+                            <span className="font-mono">{p.timeRemaining}</span>
                           </div>
                         </div>
                       </div>
@@ -403,8 +402,8 @@ function Dashboard() {
             </div>
           </section>
 
-          {/* RIGHT: CARD ATIVIDADE EM TEMPO REAL (4 Cols) */}
-          <section className="lg:col-span-4 p-4 sm:p-6 rounded-2xl border border-white/[0.09] bg-[#121316]/80 backdrop-blur-2xl shadow-[0_12px_40px_rgba(0,0,0,0.6)] flex flex-col justify-between">
+          {/* RIGHT: CARD ATIVIDADE EM TEMPO REAL (4 Cols) - Vertical list adapted for mobile */}
+          <section className="lg:col-span-4 p-4 sm:p-6 rounded-2xl border border-white/[0.09] bg-[#121316]/80 backdrop-blur-2xl shadow-[0_12px_40px_rgba(0,0,0,0.6)] flex flex-col justify-between overflow-hidden">
             <div>
               {/* Header */}
               <div className="flex items-center gap-2.5 sm:gap-3 mb-4 sm:mb-5">
@@ -417,8 +416,8 @@ function Dashboard() {
                 </div>
               </div>
 
-              {/* Events list */}
-              <div className="divide-y divide-white/[0.04]">
+              {/* Events list: Vertical stack on mobile with zero horizontal scroll */}
+              <div className="space-y-2 sm:space-y-2.5 w-full">
                 {realActivityEvents.length === 0 ? (
                   <div className="py-8 text-center text-xs text-zinc-500">
                     <Activity className="size-6 text-zinc-600 mx-auto mb-2" />
@@ -429,9 +428,9 @@ function Dashboard() {
                     return (
                       <div
                         key={ev.id}
-                        className="flex items-center justify-between gap-2.5 py-2.5 sm:py-3 px-1 transition-colors hover:bg-white/[0.04] active:bg-white/[0.06] rounded-lg"
+                        className="flex items-center justify-between gap-2.5 p-2.5 sm:p-3 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.05] active:bg-white/[0.08] transition-all w-full min-w-0"
                       >
-                        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                           {/* Round Green Badge */}
                           <div className="flex size-7 sm:size-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shadow-sm">
                             {ev.type === "completed" ? (
@@ -441,13 +440,15 @@ function Dashboard() {
                             )}
                           </div>
 
-                          <div className="min-w-0">
+                          <div className="min-w-0 flex-1">
                             <p className="text-xs font-bold text-white truncate">{ev.title}</p>
                             <p className="text-[10px] sm:text-[11px] text-zinc-400 truncate mt-0.5">{ev.action}</p>
                           </div>
                         </div>
 
-                        <span className="text-[11px] sm:text-xs font-mono text-zinc-400 shrink-0">{ev.time}</span>
+                        <span className="text-[10px] sm:text-[11px] font-mono text-zinc-400 shrink-0 bg-white/5 border border-white/[0.05] px-2 py-0.5 rounded-md">
+                          {ev.time}
+                        </span>
                       </div>
                     );
                   })
@@ -459,7 +460,7 @@ function Dashboard() {
             <div className="pt-3 sm:pt-4 mt-2">
               <Link
                 to="/queue"
-                className="w-full py-2.5 rounded-xl border border-white/[0.08] bg-white/[0.04] text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/[0.08] active:scale-98 transition-all flex items-center justify-center gap-1.5 shadow-sm min-h-[42px]"
+                className="w-full py-2.5 rounded-xl border border-white/[0.08] bg-white/[0.04] text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/[0.08] active:scale-[0.98] transition-all flex items-center justify-center gap-1.5 shadow-sm min-h-[44px]"
               >
                 <span>Ver fila de produção</span>
                 <ArrowRight className="size-3.5 text-[#ff6600]" />
