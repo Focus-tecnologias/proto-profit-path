@@ -455,17 +455,17 @@ export function QuoteNoteDialog({ quote }: { quote: QuoteData }) {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          className="w-full h-11 rounded-xl border-white/10 bg-white/5 text-sm font-semibold text-white hover:bg-white/10 transition-colors shadow-sm"
+          className="w-full h-12 rounded-xl border border-white/10 bg-white/[0.04] text-xs sm:text-sm font-semibold text-white hover:bg-white/10 hover:border-white/20 transition-all shadow-sm flex items-center justify-center gap-2 active:scale-[0.98]"
           size="lg"
         >
-          <FileText className="size-4 mr-2 text-primary" />
-          Gerar Orçamento Comercial (PDF / HTML)
+          <FileText className="size-4 text-[#ff6600]" />
+          <span>Gerar Orçamento Comercial (PDF / WhatsApp)</span>
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[92vh] max-w-5xl overflow-hidden rounded-2xl border border-white/10 bg-[#0c0d12] text-white p-0 shadow-2xl flex flex-col">
+      <DialogContent className="max-h-[92vh] max-w-5xl w-[96vw] sm:w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 bg-[#0c0d12] text-white p-0 shadow-2xl flex flex-col">
         {/* Modal Top Header */}
-        <div className="border-b border-white/[0.08] bg-[#111218] px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+        <div className="border-b border-white/[0.08] bg-[#111218] px-4 sm:px-6 py-3.5 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-center gap-3">
             <img
               src={brandLogo}
@@ -482,38 +482,38 @@ export function QuoteNoteDialog({ quote }: { quote: QuoteData }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="flex bg-[#181920] border border-white/10 p-1 rounded-lg">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="grid grid-cols-2 sm:flex w-full sm:w-auto bg-[#181920] border border-white/10 p-1 rounded-xl gap-1">
               <button
                 type="button"
                 onClick={() => setActiveView("preview")}
-                className={`flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-md transition-all ${
+                className={`flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                   activeView === "preview"
-                    ? "bg-[#ff6600] text-black shadow-sm"
+                    ? "bg-[#ff6600] text-black shadow-sm font-bold"
                     : "text-zinc-400 hover:text-white"
                 }`}
               >
                 <Eye className="size-3.5" />
-                <span>Prévia do Documento</span>
+                <span>Prévia</span>
               </button>
               <button
                 type="button"
                 onClick={() => setActiveView("settings")}
-                className={`flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-md transition-all ${
+                className={`flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                   activeView === "settings"
-                    ? "bg-[#ff6600] text-black shadow-sm"
+                    ? "bg-[#ff6600] text-black shadow-sm font-bold"
                     : "text-zinc-400 hover:text-white"
                 }`}
               >
                 <Settings2 className="size-3.5" />
-                <span>Personalizar Dados</span>
+                <span>Configurações</span>
               </button>
             </div>
           </div>
         </div>
 
         {/* Modal Body */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-3.5 sm:p-6">
           {activeView === "preview" ? (
             <div className="grid gap-6 lg:grid-cols-12 items-start">
               {/* Left Action Summary Bar (4 cols) */}
@@ -546,29 +546,29 @@ export function QuoteNoteDialog({ quote }: { quote: QuoteData }) {
                   <div className="pt-2 space-y-2">
                     <button
                       type="button"
-                      onClick={printNote}
-                      className="orange-btn w-full flex items-center justify-center gap-2 h-10 text-xs font-bold"
+                      onClick={copyText}
+                      className="orange-btn w-full flex items-center justify-center gap-2 h-11 text-xs font-bold shadow-lg shadow-[#ff6600]/20 active:scale-[0.98]"
                     >
-                      <Printer className="size-4" />
+                      <Copy className="size-4" />
+                      <span>Copiar Resumo WhatsApp</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={printNote}
+                      className="w-full flex items-center justify-center gap-2 h-10 rounded-xl border border-white/10 bg-white/5 text-xs font-semibold text-white hover:bg-white/10 active:scale-[0.98] transition-all"
+                    >
+                      <Printer className="size-4 text-[#ff6600]" />
                       <span>Imprimir / Exportar PDF</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={downloadNote}
-                      className="w-full flex items-center justify-center gap-2 h-10 rounded-lg border border-white/10 bg-white/5 text-xs font-semibold text-white hover:bg-white/10 transition-colors"
+                      className="w-full flex items-center justify-center gap-2 h-10 rounded-xl border border-white/10 bg-white/5 text-xs font-semibold text-white hover:bg-white/10 active:scale-[0.98] transition-all"
                     >
-                      <Download className="size-4 text-primary" />
+                      <Download className="size-4 text-[#ff6600]" />
                       <span>Baixar Arquivo HTML</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={copyText}
-                      className="w-full flex items-center justify-center gap-2 h-10 rounded-lg border border-white/10 bg-white/5 text-xs font-semibold text-white hover:bg-white/10 transition-colors"
-                    >
-                      <Copy className="size-4 text-primary" />
-                      <span>Copiar Resumo WhatsApp</span>
                     </button>
                   </div>
                 </div>
@@ -588,7 +588,7 @@ export function QuoteNoteDialog({ quote }: { quote: QuoteData }) {
                 <iframe
                   title="Prévia do Orçamento"
                   srcDoc={html}
-                  className="h-[620px] w-full bg-white border-0"
+                  className="h-[380px] sm:h-[500px] lg:h-[620px] w-full bg-white border-0"
                 />
               </div>
             </div>
@@ -606,7 +606,7 @@ export function QuoteNoteDialog({ quote }: { quote: QuoteData }) {
                     <Input
                       value={b.companyName}
                       onChange={(e) => set("companyName", e.target.value)}
-                      className="apple-input text-xs h-9"
+                      className="h-11 sm:h-9 text-[15px] sm:text-xs rounded-xl bg-[#16171e] border-white/10 text-white placeholder:text-zinc-600 focus:border-[#ff6600]/80 focus:ring-1 focus:ring-[#ff6600]/40"
                     />
                   </Field>
                   <Field label="CNPJ / Documento">
@@ -614,7 +614,7 @@ export function QuoteNoteDialog({ quote }: { quote: QuoteData }) {
                       value={b.document}
                       onChange={(e) => set("document", e.target.value)}
                       placeholder="00.000.000/0001-00"
-                      className="apple-input text-xs h-9"
+                      className="h-11 sm:h-9 text-[15px] sm:text-xs rounded-xl bg-[#16171e] border-white/10 text-white placeholder:text-zinc-600 focus:border-[#ff6600]/80 focus:ring-1 focus:ring-[#ff6600]/40"
                     />
                   </Field>
                   <Field label="Telefone / WhatsApp">
@@ -622,7 +622,7 @@ export function QuoteNoteDialog({ quote }: { quote: QuoteData }) {
                       value={b.contact}
                       onChange={(e) => set("contact", e.target.value)}
                       placeholder="(11) 90000-0000"
-                      className="apple-input text-xs h-9"
+                      className="h-11 sm:h-9 text-[15px] sm:text-xs rounded-xl bg-[#16171e] border-white/10 text-white placeholder:text-zinc-600 focus:border-[#ff6600]/80 focus:ring-1 focus:ring-[#ff6600]/40"
                     />
                   </Field>
                   <Field label="E-mail de Contato">
@@ -630,7 +630,7 @@ export function QuoteNoteDialog({ quote }: { quote: QuoteData }) {
                       value={b.email}
                       onChange={(e) => set("email", e.target.value)}
                       placeholder="contato@empresa.com"
-                      className="apple-input text-xs h-9"
+                      className="h-11 sm:h-9 text-[15px] sm:text-xs rounded-xl bg-[#16171e] border-white/10 text-white placeholder:text-zinc-600 focus:border-[#ff6600]/80 focus:ring-1 focus:ring-[#ff6600]/40"
                     />
                   </Field>
                   <div className="sm:col-span-2">
@@ -639,7 +639,7 @@ export function QuoteNoteDialog({ quote }: { quote: QuoteData }) {
                         value={b.address}
                         onChange={(e) => set("address", e.target.value)}
                         placeholder="Rua, Número, Bairro, Cidade - UF"
-                        className="apple-input text-xs h-9"
+                        className="h-11 sm:h-9 text-[15px] sm:text-xs rounded-xl bg-[#16171e] border-white/10 text-white placeholder:text-zinc-600 focus:border-[#ff6600]/80 focus:ring-1 focus:ring-[#ff6600]/40"
                       />
                     </Field>
                   </div>
@@ -659,14 +659,14 @@ export function QuoteNoteDialog({ quote }: { quote: QuoteData }) {
                       min={1}
                       value={b.validityDays}
                       onChange={(e) => set("validityDays", Number(e.target.value) || 1)}
-                      className="apple-input text-xs h-9 font-mono"
+                      className="h-11 sm:h-9 text-[15px] sm:text-xs rounded-xl bg-[#16171e] border-white/10 text-white font-mono placeholder:text-zinc-600 focus:border-[#ff6600]/80 focus:ring-1 focus:ring-[#ff6600]/40"
                     />
                   </Field>
                   <Field label="Número do Orçamento">
                     <Input
                       value={num}
                       onChange={(e) => setNum(e.target.value)}
-                      className="apple-input text-xs h-9 font-mono"
+                      className="h-11 sm:h-9 text-[15px] sm:text-xs rounded-xl bg-[#16171e] border-white/10 text-white font-mono placeholder:text-zinc-600 focus:border-[#ff6600]/80 focus:ring-1 focus:ring-[#ff6600]/40"
                     />
                   </Field>
                 </div>
@@ -676,7 +676,7 @@ export function QuoteNoteDialog({ quote }: { quote: QuoteData }) {
                     rows={2}
                     value={b.paymentTerms}
                     onChange={(e) => set("paymentTerms", e.target.value)}
-                    className="apple-input text-xs min-h-[60px]"
+                    className="text-[15px] sm:text-xs rounded-xl bg-[#16171e] border-white/10 text-white placeholder:text-zinc-600 focus:border-[#ff6600]/80 focus:ring-1 focus:ring-[#ff6600]/40 min-h-[60px]"
                   />
                 </Field>
 
@@ -685,7 +685,7 @@ export function QuoteNoteDialog({ quote }: { quote: QuoteData }) {
                     rows={2}
                     value={b.notes}
                     onChange={(e) => set("notes", e.target.value)}
-                    className="apple-input text-xs min-h-[60px]"
+                    className="text-[15px] sm:text-xs rounded-xl bg-[#16171e] border-white/10 text-white placeholder:text-zinc-600 focus:border-[#ff6600]/80 focus:ring-1 focus:ring-[#ff6600]/40 min-h-[60px]"
                   />
                 </Field>
               </div>
