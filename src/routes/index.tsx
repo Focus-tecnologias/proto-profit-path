@@ -277,7 +277,7 @@ function Dashboard() {
                 </Link>
               </div>
 
-              {/* Grid / Horizontal Swipe on Mobile */}
+              {/* Vertical Stack on Mobile, Grid on Tablet/Desktop */}
               {printerCardsData.length === 0 ? (
                 <div className="py-10 px-4 text-center">
                   <PrinterIcon className="size-8 text-zinc-600 mx-auto mb-2" />
@@ -294,7 +294,7 @@ function Dashboard() {
                   </Link>
                 </div>
               ) : (
-                <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-2 sm:grid sm:grid-cols-2 xl:grid-cols-3 sm:gap-4 sm:overflow-visible sm:pb-0 scrollbar-none">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
                   {printerCardsData.slice(0, 3).map((p) => {
                     const isPrinting = p.status === "printing";
                     const isIdle = p.status === "idle";
@@ -302,7 +302,7 @@ function Dashboard() {
                     return (
                       <div
                         key={p.id}
-                        className={`group relative flex flex-col justify-between rounded-2xl p-3.5 sm:p-4 transition-all duration-300 backdrop-blur-xl min-w-[280px] sm:min-w-0 snap-center shrink-0 sm:shrink ${
+                        className={`group relative flex flex-col justify-between rounded-2xl p-3.5 sm:p-4 transition-all duration-300 backdrop-blur-xl w-full ${
                           isPrinting
                             ? "border border-[#ff6600]/90 bg-[#1a1816]/90 shadow-[0_0_22px_rgba(255,102,0,0.2)]"
                             : "border border-white/[0.08] bg-[#18191f]/60 hover:border-white/[0.18] hover:bg-[#1c1d24]/70"
