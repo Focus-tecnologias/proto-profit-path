@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as EstimatorRouteImport } from './routes/estimator'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as OperationsRouteImport } from './routes/operations'
+import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as PrintersRouteImport } from './routes/printers'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as QueueRouteImport } from './routes/queue'
@@ -36,6 +37,11 @@ const InventoryRoute = InventoryRouteImport.update({
 const OperationsRoute = OperationsRouteImport.update({
   id: '/operations',
   path: '/operations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrintersRoute = PrintersRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/estimator': typeof EstimatorRoute
   '/inventory': typeof InventoryRoute
   '/operations': typeof OperationsRoute
+  '/orders': typeof OrdersRoute
   '/printers': typeof PrintersRoute
   '/products': typeof ProductsRoute
   '/queue': typeof QueueRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/estimator': typeof EstimatorRoute
   '/inventory': typeof InventoryRoute
   '/operations': typeof OperationsRoute
+  '/orders': typeof OrdersRoute
   '/printers': typeof PrintersRoute
   '/products': typeof ProductsRoute
   '/queue': typeof QueueRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/estimator': typeof EstimatorRoute
   '/inventory': typeof InventoryRoute
   '/operations': typeof OperationsRoute
+  '/orders': typeof OrdersRoute
   '/printers': typeof PrintersRoute
   '/products': typeof ProductsRoute
   '/queue': typeof QueueRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/estimator'
     | '/inventory'
     | '/operations'
+    | '/orders'
     | '/printers'
     | '/products'
     | '/queue'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/estimator'
     | '/inventory'
     | '/operations'
+    | '/orders'
     | '/printers'
     | '/products'
     | '/queue'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/estimator'
     | '/inventory'
     | '/operations'
+    | '/orders'
     | '/printers'
     | '/products'
     | '/queue'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   EstimatorRoute: typeof EstimatorRoute
   InventoryRoute: typeof InventoryRoute
   OperationsRoute: typeof OperationsRoute
+  OrdersRoute: typeof OrdersRoute
   PrintersRoute: typeof PrintersRoute
   ProductsRoute: typeof ProductsRoute
   QueueRoute: typeof QueueRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/operations'
       fullPath: '/operations'
       preLoaderRoute: typeof OperationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/printers': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   EstimatorRoute: EstimatorRoute,
   InventoryRoute: InventoryRoute,
   OperationsRoute: OperationsRoute,
+  OrdersRoute: OrdersRoute,
   PrintersRoute: PrintersRoute,
   ProductsRoute: ProductsRoute,
   QueueRoute: QueueRoute,

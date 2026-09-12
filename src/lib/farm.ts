@@ -560,3 +560,285 @@ export function useDeleteSession() {
     onSuccess: invalidate,
   });
 }
+
+/* ---------------- Orders / Ordens de Pedidos ---------------- */
+
+export type OrderStatus = "pending" | "approved" | "rejected" | "in_production" | "completed";
+export type OrderPriority = "low" | "normal" | "high" | "urgent";
+
+export type Order = {
+  id: string;
+  order_number: string;
+  customer_name: string;
+  title: string;
+  dimensions_xyz: string;
+  dim_x?: number | undefined;
+  dim_y?: number | undefined;
+  dim_z?: number | undefined;
+  file_name?: string | undefined;
+  file_size?: string | undefined;
+  file_url?: string | undefined;
+  image_url?: string | undefined;
+  quote_id?: string | null | undefined;
+  material_type: string;
+  quantity: number;
+  weight_grams?: number | undefined;
+  print_time_hours?: number | undefined;
+  total_price: number;
+  due_date?: string | undefined;
+  priority: OrderPriority;
+  status: OrderStatus;
+  rejection_reason?: string | undefined;
+  assigned_printer_id?: string | null | undefined;
+  assigned_operator_id?: string | null | undefined;
+  notes?: string | undefined;
+  created_at: string;
+};
+
+const INITIAL_ORDERS: Order[] = [
+  {
+    id: "ord-001",
+    order_number: "ORD-2026-001",
+    customer_name: "AutoTech Componentes Industriais",
+    title: "Conjunto de Engrenagens Helicoidais",
+    dimensions_xyz: "85 x 85 x 42 mm",
+    dim_x: 85,
+    dim_y: 85,
+    dim_z: 42,
+    file_name: "engrenagem_helical_v4.step",
+    file_size: "4.8 MB",
+    image_url: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+    material_type: "PETG Carbono",
+    quantity: 6,
+    weight_grams: 340,
+    print_time_hours: 14.5,
+    total_price: 520.0,
+    due_date: "2026-09-18",
+    priority: "high",
+    status: "in_production",
+    assigned_printer_id: "p-bambu-x1",
+    notes: "Tolerância mecânica precisa (0.15mm). Preenchimento 60% giroide.",
+    created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+  },
+  {
+    id: "ord-002",
+    order_number: "ORD-2026-002",
+    customer_name: "Soluções IoT & Embarcados",
+    title: "Case de Proteção Industrial Raspberry Pi 5",
+    dimensions_xyz: "98 x 68 x 34 mm",
+    dim_x: 98,
+    dim_y: 68,
+    dim_z: 34,
+    file_name: "case_rpi5_focus_pro.stl",
+    file_size: "12.2 MB",
+    image_url: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+    material_type: "ABS Preto",
+    quantity: 15,
+    weight_grams: 680,
+    print_time_hours: 22.0,
+    total_price: 890.0,
+    due_date: "2026-09-22",
+    priority: "normal",
+    status: "pending",
+    notes: "Aguardando validação dos furos de ventilação lateral para aprovação.",
+    created_at: new Date(Date.now() - 3600000 * 5).toISOString(),
+  },
+  {
+    id: "ord-003",
+    order_number: "ORD-2026-003",
+    customer_name: "Lab Robótica & Automação USP",
+    title: "Segmento de Braço Articulado para Atuador",
+    dimensions_xyz: "240 x 185 x 190 mm",
+    dim_x: 240,
+    dim_y: 185,
+    dim_z: 190,
+    file_name: "arm_segment_a_v2.stl",
+    file_size: "34.6 MB",
+    image_url: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=600&q=80",
+    material_type: "TPU Flexível",
+    quantity: 2,
+    weight_grams: 450,
+    print_time_hours: 18.0,
+    total_price: 460.0,
+    due_date: "2026-09-15",
+    priority: "urgent",
+    status: "rejected",
+    rejection_reason: "Inviabilidade técnica: espessura de parede inferior a 0.8mm no suporte do flange e material TPU não possui rigidez torsional suficiente para o torque solicitado. Requer reforço da malha e troca por PLA Tough ou Nylon.",
+    notes: "Revisão pendente com o engenheiro responsável.",
+    created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
+  },
+  {
+    id: "ord-004",
+    order_number: "ORD-2026-004",
+    customer_name: "Dra. Marina Santos Odontologia",
+    title: "Guias Cirúrgicos de Implante Guiado",
+    dimensions_xyz: "60 x 55 x 28 mm",
+    dim_x: 60,
+    dim_y: 55,
+    dim_z: 28,
+    file_name: "guia_cirurgica_mandibular.3mf",
+    file_size: "8.4 MB",
+    image_url: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=600&q=80",
+    material_type: "Resina Biocompatível",
+    quantity: 4,
+    weight_grams: 95,
+    print_time_hours: 6.0,
+    total_price: 640.0,
+    due_date: "2026-09-14",
+    priority: "urgent",
+    status: "completed",
+    notes: "Concluído e esterilizado para entrega.",
+    created_at: new Date(Date.now() - 86400000 * 5).toISOString(),
+  },
+];
+
+const ORDERS_STORAGE_KEY = "focus_lab_orders_v1";
+
+function getLocalOrders(): Order[] {
+  if (typeof window === "undefined") return INITIAL_ORDERS;
+  try {
+    const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
+    if (!raw) {
+      localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(INITIAL_ORDERS));
+      return INITIAL_ORDERS;
+    }
+    return JSON.parse(raw);
+  } catch {
+    return INITIAL_ORDERS;
+  }
+}
+
+function setLocalOrders(orders: Order[]) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
+  } catch {}
+}
+
+export function useOrders() {
+  return useQuery({
+    queryKey: ["orders"],
+    queryFn: async (): Promise<Order[]> => {
+      try {
+        const { data, error } = await (supabase as any)
+          .from("orders")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (error || !data || data.length === 0) {
+          return getLocalOrders();
+        }
+        return data as Order[];
+      } catch {
+        return getLocalOrders();
+      }
+    },
+  });
+}
+
+export function useCreateOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (orderInput: Partial<Order>) => {
+      const newOrder: Order = {
+        id: `ord-${Date.now()}`,
+        order_number: `ORD-${new Date().getFullYear()}-${String(Math.floor(100 + Math.random() * 900))}`,
+        customer_name: orderInput.customer_name || "Cliente sem nome",
+        title: orderInput.title || "Novo Pedido de Impressão",
+        dimensions_xyz: orderInput.dimensions_xyz || `${orderInput.dim_x || 50} x ${orderInput.dim_y || 50} x ${orderInput.dim_z || 50} mm`,
+        dim_x: orderInput.dim_x,
+        dim_y: orderInput.dim_y,
+        dim_z: orderInput.dim_z,
+        file_name: orderInput.file_name || "projeto_3d.stl",
+        file_size: orderInput.file_size || "5.0 MB",
+        file_url: orderInput.file_url,
+        image_url: orderInput.image_url || "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80",
+        quote_id: orderInput.quote_id || null,
+        material_type: orderInput.material_type || "PLA Premium",
+        quantity: Number(orderInput.quantity || 1),
+        weight_grams: orderInput.weight_grams ? Number(orderInput.weight_grams) : undefined,
+        print_time_hours: orderInput.print_time_hours ? Number(orderInput.print_time_hours) : undefined,
+        total_price: Number(orderInput.total_price || 0),
+        due_date: orderInput.due_date,
+        priority: orderInput.priority || "normal",
+        status: "pending",
+        notes: orderInput.notes || "",
+        created_at: new Date().toISOString(),
+      };
+
+      try {
+        await (supabase as any).from("orders").insert(newOrder);
+      } catch {}
+
+      const current = getLocalOrders();
+      setLocalOrders([newOrder, ...current]);
+      return newOrder;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+}
+
+export function useUpdateOrderStatus() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      id,
+      status,
+      rejection_reason,
+      assigned_printer_id,
+    }: {
+      id: string;
+      status: OrderStatus;
+      rejection_reason?: string;
+      assigned_printer_id?: string | null;
+    }) => {
+      try {
+        await (supabase as any)
+          .from("orders")
+          .update({
+            status,
+            rejection_reason: rejection_reason || null,
+            assigned_printer_id: assigned_printer_id || null,
+          })
+          .eq("id", id);
+      } catch {}
+
+      const current = getLocalOrders();
+      const updated = current.map((o) =>
+        o.id === id
+          ? {
+              ...o,
+              status,
+              rejection_reason: rejection_reason !== undefined ? rejection_reason : o.rejection_reason,
+              assigned_printer_id: assigned_printer_id !== undefined ? assigned_printer_id : o.assigned_printer_id,
+            }
+          : o
+      );
+      setLocalOrders(updated);
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["orders"] });
+      qc.invalidateQueries({ queryKey: ["jobs"] });
+      qc.invalidateQueries({ queryKey: ["printers"] });
+    },
+  });
+}
+
+export function useDeleteOrder() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      try {
+        await (supabase as any).from("orders").delete().eq("id", id);
+      } catch {}
+
+      const current = getLocalOrders();
+      setLocalOrders(current.filter((o) => o.id !== id));
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+}
+

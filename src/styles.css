@@ -5,13 +5,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.25rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -38,74 +37,84 @@
   --color-emerald-accent: var(--emerald-accent);
   --color-amber-accent: var(--amber-accent);
   --color-cyan-accent: var(--cyan-accent);
-  --color-rose-accent: var(--rose-accent);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --font-display: "Urbanist", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Epilogue", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", Menlo, monospace;
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.625rem;
 
-  --background: oklch(0.14 0.004 250);
-  --foreground: oklch(0.97 0.003 75);
-  --surface: oklch(0.19 0.005 250);
-  --surface-raised: oklch(0.24 0.006 250);
-  --card: oklch(0.19 0.005 250);
-  --card-foreground: oklch(0.96 0.003 250);
-  --popover: oklch(0.21 0.009 264);
-  --popover-foreground: oklch(0.96 0.003 250);
-  --primary: oklch(0.69 0.21 42);
-  --primary-foreground: oklch(0.99 0.002 75);
-  --secondary: oklch(0.25 0.007 250);
-  --secondary-foreground: oklch(0.94 0.003 250);
-  --muted: oklch(0.24 0.006 250);
-  --muted-foreground: oklch(0.67 0.009 250);
-  --accent: oklch(0.26 0.007 250);
-  --accent-foreground: oklch(0.96 0.003 250);
-  --destructive: oklch(0.62 0.21 22);
-  --destructive-foreground: oklch(0.98 0.003 250);
-  --border: oklch(0.3 0.008 250);
-  --input: oklch(0.3 0.008 250);
-  --ring: oklch(0.69 0.21 42);
-  --sidebar: oklch(0.16 0.005 250);
+  /* Pure Neutral Dark & Apple Pro Laser Orange */
+  --background: #000000;
+  --foreground: #f5f5f7;
+  --surface: #0a0a0c;
+  --surface-raised: #121214;
+  --card: rgba(10, 10, 12, 0.7);
+  --card-foreground: #f5f5f7;
+  --popover: #121214;
+  --popover-foreground: #f5f5f7;
+  
+  /* Apple Pro Laser Orange Accent */
+  --primary: #ff6600;
+  --primary-foreground: #ffffff;
+  
+  --secondary: #141416;
+  --secondary-foreground: #e5e5ea;
+  --muted: #141416;
+  --muted-foreground: #8e8e93;
+  --accent: #1c1c20;
+  --accent-foreground: #ffffff;
+  
+  --destructive: #ff453a;
+  --destructive-foreground: #ffffff;
+  
+  --border: rgba(255, 255, 255, 0.08);
+  --input: #121214;
+  --ring: #ff6600;
+  --sidebar: #050507;
 
-  --emerald-accent: oklch(0.75 0.17 160);
-  --amber-accent: oklch(0.8 0.16 78);
-  --cyan-accent: oklch(0.69 0.21 42);
-  --rose-accent: oklch(0.68 0.2 18);
+  --emerald-accent: #30d158;
+  --amber-accent: #ff9f0a;
+  --cyan-accent: #64d2ff;
 
-  --chart-1: oklch(0.78 0.14 200);
-  --chart-2: oklch(0.75 0.17 160);
-  --chart-3: oklch(0.8 0.16 78);
-  --chart-4: oklch(0.68 0.2 18);
-  --chart-5: oklch(0.66 0.13 280);
-
-  --gradient-rail: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--cyan-accent) 22%, transparent),
-    transparent
-  );
-  --shadow-panel: 0 1px 0 0 color-mix(in oklab, white 6%, transparent) inset,
-    0 18px 40px -24px oklch(0 0 0 / 0.9);
+  --chart-1: #ff6600;
+  --chart-2: #ff9f0a;
+  --chart-3: #30d158;
+  --chart-4: #64d2ff;
+  --chart-5: #bf5af2;
 }
 
 @layer base {
   * {
     border-color: var(--color-border);
+    -webkit-tap-highlight-color: transparent;
   }
 
+  html,
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
-    background-image: linear-gradient(to right, color-mix(in oklab, white 2%, transparent) 1px, transparent 1px);
-    background-size: 72px 72px;
+    letter-spacing: -0.015em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    touch-action: manipulation;
+    overflow-x: hidden;
+    background-image: 
+      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255, 102, 0, 0.07), transparent 70%),
+      radial-gradient(ellipse 40% 30% at 90% 10%, rgba(255, 102, 0, 0.03), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  button,
+  a {
+    touch-action: manipulation;
   }
 
   h1,
@@ -113,31 +122,99 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    letter-spacing: 0;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 102, 0, 0.6);
   }
 }
 
-@utility panel {
-  background-color: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-panel);
+@utility apple-card {
+  background-color: rgba(10, 10, 12, 0.65);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@utility printer-grid {
-  background-image: radial-gradient(circle, color-mix(in oklab, var(--foreground) 9%, transparent) 1px, transparent 1px);
-  background-size: 18px 18px;
+@utility dark-glass {
+  background-color: rgba(6, 6, 8, 0.6);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+@utility dark-glass-inner {
+  background-color: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+@utility apple-card-glow {
+  box-shadow: 0 0 30px -4px rgba(255, 102, 0, 0.2), 0 4px 24px -1px rgba(0, 0, 0, 0.5);
 }
 
 @utility label-tag {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.6875rem;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--muted-foreground);
 }
 
 @utility num {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
+  font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+@utility orange-btn {
+  background: linear-gradient(180deg, #ff7300 0%, #ff5500 100%);
+  color: #ffffff;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 0 2px 12px rgba(255, 102, 0, 0.3), 0 1px 1px rgba(255, 255, 255, 0.2) inset;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 4px 18px rgba(255, 102, 0, 0.45);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+@utility apple-input {
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #ffffff;
+  transition: all 0.2s;
+
+  &:focus {
+    border-color: rgba(255, 102, 0, 0.6);
+    box-shadow: 0 0 15px rgba(255, 102, 0, 0.2);
+  }
 }
