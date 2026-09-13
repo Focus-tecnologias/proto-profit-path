@@ -468,6 +468,29 @@ function Estimator() {
           </div>
         </section>
       </div>
+
+      {/* Mobile Sticky Quick Summary Bar */}
+      <div className="fixed bottom-16 left-0 right-0 z-30 px-4 py-2.5 bg-[#0d0e14]/95 backdrop-blur-2xl border-t border-white/10 lg:hidden flex items-center justify-between gap-3 shadow-2xl safe-bottom">
+        <div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] uppercase font-bold text-zinc-400">Total</span>
+            <span className="text-[10px] font-mono font-bold text-[#ff6600] bg-[#ff6600]/15 px-1.5 py-0.2 rounded">
+              +{margin}%
+            </span>
+          </div>
+          <p className="font-mono text-base font-extrabold text-white">
+            {money(result.finalPrice, currency)}
+          </p>
+        </div>
+        <Button
+          className="h-10 px-4 rounded-xl bg-[#ff6600] text-black font-bold text-xs hover:brightness-110 active:scale-[0.98] shadow-lg shadow-[#ff6600]/25 flex items-center gap-1.5 shrink-0"
+          onClick={submit}
+          disabled={createJob.isPending}
+        >
+          <span>Criar e Enviar</span>
+          <ArrowRight className="size-3.5" />
+        </Button>
+      </div>
     </AppShell>
   );
 }
